@@ -24,19 +24,12 @@ function Dataset(sequences::AbstractVector{Sequence{A,L}}, N::AbstractArray{C,3}
 	Dataset{A,L,V,T,C}(sequences, N)
 end
 
-"average selectivities of all sequences in an experiment"
+"selectivity of each sequence in every round and replicate"
 function selectivities(d::Dataset)
-	S,V,T = size(d.N)
-	θ = zeros(S)
-	for t=1:T-1, v=1:V
-		normalization = (T-1)V/S * sum(d.N[s,v,t+1]/d.N[s,v,t] for s=1:S if d.N[s,v,t] > 0)
-		for s=1:S
-			if d.N[s,v,t] > 0
-				θ[s] += d.N[s,v,t+1] / d.N[s,v,t] / normalization
-			end
-		end
-	end
-	nothing
+    S,V,T = size(d.N)
+    θ = d.N[:,:,2:T] ./ max.(d.N[:,:,1:T-1], one(eltype(d.N)))
+    normalization = sum(θ; dims=(1,))
+	θ ./ normalization
 end
 
 "extracts the counts of a sequence from a dataset"

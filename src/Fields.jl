@@ -8,10 +8,12 @@ struct Fields{A, L, U<:Real}
     end
 end
 
+Fields{A,L}(x::Vector{U}) where {A, L, U<:Real} = Fields{A,L,U}(x)
+Fields{A,L,U}() where {A, L, U<:Real} = Fields{A,L}(zeros(U, fieldslen(A,L)))
+Fields{A,L}() where {A,L} = Fields{A,L,Float64}()
+
 Base.getindex(fields::Fields, inds...) = fields.x[inds...]
 Base.setindex!(fields::Fields, v, inds...) = setindex!(fields.x, v, inds...)
-
-Fields{A,L}(x::Vector{U}) where {A, L, U<:Real} = Fields{A,L,U}(x)
 
 "fast binomial(n,2)"
 @inline function binom2(n::Int)
