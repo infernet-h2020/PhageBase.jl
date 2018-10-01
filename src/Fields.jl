@@ -1,4 +1,4 @@
-export Fields, get_field, field_index, set_field!
+export Fields, get_field, field_index, set_field!, fieldslen
 
 struct Fields{A, L, U<:Real}
     x::Vector{U}
