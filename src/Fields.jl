@@ -57,6 +57,7 @@ function set_field!(fields::Fields,
                     val::Real)
     idx = field_index(fields,a,i)
     @inbounds fields.x[idx] = val
+    nothing
 end
 
 "set J[a,b,i,j]"
@@ -65,4 +66,5 @@ function set_field!(fields::Fields,
                     val::Real)
     idx = field_index(fields,a,b,i,j)
     @inbounds fields.x[idx] = val
+    nothing
 end
