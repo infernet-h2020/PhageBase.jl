@@ -1,6 +1,6 @@
-export Dataset, selectivities, randtrain, seqcounts
+export Dataset, selectivities, avgselectivity, randtrain, seqcounts
 
-import Random
+using Random, Statistics
 
 "phage display experiment dataset"
 struct Dataset{A, L, V, T, C<:Real}
@@ -30,6 +30,12 @@ function selectivities(d::Dataset)
     θ = d.N[:,:,2:T] ./ max.(d.N[:,:,1:T-1], one(eltype(d.N)))
     normalization = sum(θ; dims=(1,))
 	θ ./ normalization
+end
+
+"average selectivity of each sequence"
+function avgselectivity(data::Dataset)
+	θ = selectivities(data)
+	vec(mean(θ; dims=(2,3)))
 end
 
 "extracts the counts of a sequence from a dataset"
