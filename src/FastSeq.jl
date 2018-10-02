@@ -51,7 +51,8 @@ This should be handled by the promotion below, but it doesn't work.
 https://discourse.julialang.org/t/for-custom-type-and-promote-rule/15806 =#
 Base.:(==)(s::FastSeq, r::Sequence) = s.sequence == r
 Base.:(==)(s::Sequence, r::FastSeq) = s == r.sequence
-#Base.promote_rule(::Type{FastSeq{A,L}}, ::Type{Sequence{A,L}}) where {A,L} = Sequence{A,L}
+#Base.promote_rule(::Type{FastSeq{A,L,FIdx}}, ::Type{Sequence{A,L}}) where {A,L,FIdx} = Sequence{A,L}
+#Base.:(==)(s::Union{Sequence,FastSeq}, r::Union{Sequence,FastSeq}) = ==(promote(s,r)...)
 
 "fast computation of energy of sequence s using 'fields' (h,J)"
 function energy(fields::Fields{A,L,U}, s::FastSeq{A,L}) where {A,L,U}
