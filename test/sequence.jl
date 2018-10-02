@@ -7,10 +7,16 @@ using Random
         @test a == i
     end
 
+    @test Sequence{3,2}(1,2) == Sequence{4,2}(1,2)
+    @test Sequence{3,2}(1,2) != Sequence{4,2}(1,3)
+
+    @test hash(Sequence{3,2}(1,2)) == hash(Sequence{4,2}(1,2))
+
     @test collect(SequenceIterator{2,3}()) == [Sequence{2,3}(1, 1, 1), Sequence{2,3}(1, 1, 2),
                                                Sequence{2,3}(1, 2, 1), Sequence{2,3}(1, 2, 2),
                                                Sequence{2,3}(2, 1, 1), Sequence{2,3}(2, 1, 2),
                                                Sequence{2,3}(2, 2, 1), Sequence{2,3}(2, 2, 2)]
+
     @test length(collect(SequenceIterator{4,5}())) == 4^5
     @test length(SequenceIterator{4,5}()) == 4^5
 end

@@ -22,14 +22,17 @@ Sequence{A,L}(s::Integer...) where {A,L} = Sequence{A,L}(s)
 Sequence{A}(s::Integer...) where {A} = Sequence{A}(s)
 Sequence{A,L}(s::AbstractVector{<:Integer}) where {A,L} = Sequence{A,L}(Tuple(s))
 
+Base.convert(::Type{Sequence{A,L}}, s::NTuple{L,Int}) where {A,L} = Sequence{A,L}(s)
+Base.convert(::Type{NTuple{L,Int}}, s::Sequence{A,L}) where {A,L} = s.s
+
+Base.:(==)(s::Sequence, r::Sequence) = s.s == r.s
+Base.hash(s::Sequence) = hash(s.s)
+
 Base.getindex(s::Sequence, i) = s.s[i]
 Base.length(s::Sequence) = length(s.s)
 Base.eltype(::Type{<:Sequence}) = eltype(s.s)
 Base.iterate(s::Sequence) = iterate(s.s)
 Base.iterate(s::Sequence, state) = iterate(s.s, state)
-
-Base.convert(::Type{Sequence{A,L}}, s::NTuple{L,Int}) where {A,L} = Sequence{A,L}(s)
-Base.convert(::Type{NTuple{L,Int}}, s::Sequence{A,L}) where {A,L} = s.s
 
 function Random.rand(rng::Random.AbstractRNG, ::Random.SamplerType{Sequence{A,L}}) where {A,L}
 	Sequence{A,L}(ntuple(i -> rand(1:A), Val(L)))
