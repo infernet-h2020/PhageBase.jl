@@ -23,8 +23,10 @@ macro checknonnegint(X::Union{Expr,Symbol}...)
 end
 
 "accurate log(1 + exp(x))"
-@inline log1pexp(x::Real) = x ≤ -37 ? exp(x) : x ≤ 18 ? log1p(exp(x)) : x ≤ 33.3 ? x + exp(-x) : x;
-#@inline log1pexp(x::Real) = log1pexp(float(x))
+@inline function log1pexp(z::Real)
+	x = float(z)
+	x ≤ -37 ? exp(x) : x ≤ 18 ? log1p(exp(x)) : x ≤ 33.3 ? x + exp(-x) : x;
+end
 
 "Fermi-Dirac binding probability"
 fermi_dirac_prob(φ::Real) = 1 / (1 + exp(-φ))
