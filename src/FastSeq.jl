@@ -30,10 +30,21 @@ struct FastSeq{A,L,FIdx}
     end
 end
 
-FastSeq(s::Sequence{A,L}) where {A,L} = FastSeq{A,L,fidxlen(L)}(s)
+FastSeq{A,L}(s::Sequence{A,L}) where {A,L} = FastSeq{A,L,fidxlen(L)}(s)
+FastSeq{A,L}(s::NTuple{L,Integer}) where {A,L} = FastSeq{A,L}(Sequence{A,L}(s))
+FastSeq{A,L}(s::Integer...) where {A,L} = FastSeq{A,L}(s)
+FastSeq{A,L}(s::AbstractVector{<:Integer}) where {A,L} = FastSeq{A,L}(Tuple(s))
+
+FastSeq(s::Sequence{A,L}) where {A,L} = FastSeq{A,L}(s)
+FastSeq{A}(s::NTuple{L,Integer}) where {A,L} = FastSeq{A,L}(s)
+FastSeq{A}(s::Integer...) where {A} = FastSeq{A}(s)
+FastSeq{A}(s::AbstractVector{<:Integer}) where {A} = FastSeq{A}(Tuple(s))
 
 Base.convert(::Type{NTuple{L,Int}}, s::FastSeq{A,L}) where {A,L} = s.sequence.s
 Base.convert(::Type{Sequence{A,L}}, s::FastSeq{A,L}) where {A,L} = s.sequence
+
+Base.:(==)(s::FastSeq, r::FastSeq) = s.sequence == r.sequence
+Base.hash(s::FastSeq) = hash(s.sequence)
 
 "fast computation of energy of sequence s using 'fields' (h,J)"
 function energy(fields::Fields{A,L,U}, s::FastSeq{A,L}) where {A,L,U}

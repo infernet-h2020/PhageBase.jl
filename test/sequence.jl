@@ -7,8 +7,8 @@ using Random
         @test a == i
     end
 
-    @test Sequence{3,2}(1,2) == Sequence{4,2}(1,2)
-    @test Sequence{3,2}(1,2) != Sequence{4,2}(1,3)
+    @test Sequence{3}(1,2) == Sequence{4}(1,2)
+    @test Sequence{3}(1,2) != Sequence{4}(1,3)
 
     @test hash(Sequence{3,2}(1,2)) == hash(Sequence{4,2}(1,2))
 
@@ -26,6 +26,9 @@ end
         Random.seed!(476272059+testrep)
         A = rand(2:6); L = rand(2:6)
         s = rand(Sequence{A,L})
+
+        @test FastSeq{3}(1,2) == FastSeq{4}(1,2)
+        @test FastSeq{3}(1,2) != FastSeq{4}(1,3)    
                 
         fs = FastSeq(s)
         @test fs.sequence == s

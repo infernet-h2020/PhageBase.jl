@@ -7,20 +7,19 @@ struct Sequence{A,L}
     s::NTuple{L,Int}
     function Sequence{A,L}(s::NTuple{L,Integer}) where {A,L}
 		@checkposint A
-        for i = 1:L
-			if !(1 ≤ s[i] ≤ A)
-				throw(ArgumentError("sequence letters must be 1 ≤ s[i] ≤ A; got s[$i]=$(s[i]), A=$A"))
-			end
+		for i = 1:L
+			@assert 1 ≤ s[i] ≤ A
 		end
 		
         new(s)
     end
 end
 
-Sequence{A}(s::NTuple{L,Integer}) where {A,L} = Sequence{A,L}(s)
 Sequence{A,L}(s::Integer...) where {A,L} = Sequence{A,L}(s)
-Sequence{A}(s::Integer...) where {A} = Sequence{A}(s)
 Sequence{A,L}(s::AbstractVector{<:Integer}) where {A,L} = Sequence{A,L}(Tuple(s))
+Sequence{A}(s::Integer...) where {A} = Sequence{A}(s)
+Sequence{A}(s::NTuple{L,Integer}) where {A,L} = Sequence{A,L}(s)
+Sequence{A}(s::AbstractVector{<:Integer}) where {A} = Sequence{A}(Tuple(s))
 
 Base.convert(::Type{Sequence{A,L}}, s::NTuple{L,Int}) where {A,L} = Sequence{A,L}(s)
 Base.convert(::Type{NTuple{L,Int}}, s::Sequence{A,L}) where {A,L} = s.s
