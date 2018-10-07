@@ -1,6 +1,9 @@
-export Dataset, selectivities, avgselectivity, randtrain, seqcounts
+export Dataset, number_of_sequences, selectivities, avgselectivity
+export randtrain, seqcounts
+
 
 using Random, Statistics
+
 
 "phage display experiment dataset"
 struct Dataset{A, L, V, T, C<:Real}
@@ -24,6 +27,10 @@ function Dataset(sequences::AbstractVector{Sequence{A,L}}, N::AbstractArray{C,3}
 	Dataset{A,L,V,T,C}(sequences, N)
 end
 
+
+number_of_sequences(d::Dataset) = length(d.sequences)
+
+
 "selectivity of each sequence in every round and replicate"
 function selectivities(d::Dataset)
     S,V,T = size(d.N)
@@ -32,11 +39,13 @@ function selectivities(d::Dataset)
 	θ ./ normalization
 end
 
+
 "average selectivity of each sequence"
 function avgselectivity(data::Dataset)
 	θ = selectivities(data)
 	vec(mean(θ; dims=(2,3)))
 end
+
 
 "extracts the counts of a sequence from a dataset"
 function seqcounts(data::Dataset{A,L,V,T,C}, 
@@ -54,6 +63,7 @@ function seqcounts(data::Dataset{A,L,V,T,C},
 		end
 	end
 end
+
 
 "splits data into training and test datasets"
 function randtrain(d::Dataset, trainsize::Integer)
@@ -74,6 +84,7 @@ function randtrain(d::Dataset, trainsize::Integer)
 
     return traindata, testsdata
 end
+
 
 "splits data into training, test and validation datasets"
 function randtrain(d::Dataset, trainsize::Integer, testssize::Integer)
