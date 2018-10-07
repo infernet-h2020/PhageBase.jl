@@ -18,12 +18,14 @@ using Random
 end
 
 
-Random.seed!(RANDSEED+=1)
-@testset "Fermi Dirac binding probability (RANDSEED=$RANDSEED)" begin
+@testset "Fermi Dirac binding probability" begin
+    Random.seed!(119808)
     
     for _ = 1 : 10
         φ = randn()
         p = fermi_dirac_prob(φ)
+        
+        @test p ≈ 1 / (1 + exp(-φ))
 
         @test fermi_dirac_logp(φ) ≈ log(p)
         @test fermi_dirac_1mp(φ) ≈ 1 - p
@@ -33,6 +35,12 @@ Random.seed!(RANDSEED+=1)
         E = randn()
         φ = μ - E
         
-        @test fermi_dirac_prob(μ, E) ≈ fermi_dirac_prob(φ)
+        for f in (fermi_dirac_prob, 
+                  fermi_dirac_logp, 
+                  fermi_dirac_1mp, 
+                  fermi_dirac_l1mp)
+            
+            @test f(μ, E) ≈ f(φ)        
+        end
     end
 end

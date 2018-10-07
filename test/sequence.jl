@@ -25,6 +25,7 @@ end
 @testset "FastSeq" begin
     for testrep=1:3
         Random.seed!(476272059+testrep)
+        
         A = rand(2:6); L = rand(2:6)
         s = rand(Sequence{A,L})
 
