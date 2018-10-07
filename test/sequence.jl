@@ -21,6 +21,7 @@ using Random
     @test length(SequenceIterator{4,5}()) == 4^5
 end
 
+
 @testset "FastSeq" begin
     for testrep=1:3
         Random.seed!(476272059+testrep)
