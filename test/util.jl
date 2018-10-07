@@ -1,3 +1,6 @@
+using Random
+
+
 @testset "log1pexp" begin
 
     @test log1pexp(1) isa Float64
@@ -12,4 +15,24 @@
     @test log1pexp(0) ≈ 0.69314718055994530941723212145817656807550013436025525412068000
     @test log1pexp(20) ≈ 20.000000002061153620314380703238982798877915235602669875387647193
     @test log1pexp(40) ≈ 40.0000000000000000042483542552915889863049778436315821818777506798
+end
+
+
+Random.seed!(RANDSEED+=1)
+@testset "Fermi Dirac binding probability (RANDSEED=$RANDSEED)" begin
+    
+    for _ = 1 : 10
+        φ = randn()
+        p = fermi_dirac_prob(φ)
+
+        @test fermi_dirac_logp(φ) ≈ log(p)
+        @test fermi_dirac_1mp(φ) ≈ 1 - p
+        @test fermi_dirac_l1mp(φ) ≈ log(1 - p)
+
+        μ = randn()
+        E = randn()
+        φ = μ - E
+        
+        @test fermi_dirac_prob(μ, E) ≈ fermi_dirac_prob(φ)
+    end
 end
