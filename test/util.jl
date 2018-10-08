@@ -11,6 +11,11 @@ using Random
 
     @test xexpx(0) isa Float64
     @test xexpx(Float16(0)) isa Float16
+
+    @inferred xexpx(-Inf)
+    @inferred xexpx(0)
+    @inferred xexpx(0.)
+    @inferred xexpx(NaN)
     
     for testid = 1:10
         Random.seed!(testid + 160)

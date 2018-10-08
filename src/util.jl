@@ -38,7 +38,7 @@ end
 # @inline xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
 
 "x * exp(x), giving zero if x == -Inf"
-@inline xexpx(x::Real) = x == -Inf ? zero(float(x)) : x * exp(x)
+@inline xexpx(x::Real) = x == -Inf ? exp(x) : x * exp(x)
 
 
 "Fermi-Dirac binding probability"
