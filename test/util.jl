@@ -1,6 +1,18 @@
 using Random
 
 
+@testset "xlogx" begin
+    @test iszero(xlogx(0))
+    @test iszero(xlogx(0.))
+    
+    for testid = 1:10
+        Random.seed!(testid + 160)
+        x = 10rand()
+        @test xlogx(x) ≈ x * log(x)
+    end
+end
+
+
 @testset "log1pexp" begin
 
     @test log1pexp(1) isa Float64
