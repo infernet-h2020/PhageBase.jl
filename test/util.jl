@@ -1,14 +1,23 @@
 using Random
 
 
-@testset "xlogx" begin
+@testset "xlogx, xexpx" begin
     @test iszero(xlogx(0))
-    @test iszero(xlogx(0.))
+
+    @test xlogx(0) isa Float64
+    @test xlogx(Float16(0)) isa Float16
+
+    @test iszero(xexpx(-Inf))
+
+    @test xexpx(0) isa Float64
+    @test xexpx(Float16(0)) isa Float16
     
     for testid = 1:10
         Random.seed!(testid + 160)
         x = 10rand()
+        iszero(x) && continue   # should never happen
         @test xlogx(x) ≈ x * log(x)
+        @test xexpx(x) ≈ x * exp(x)
     end
 end
 

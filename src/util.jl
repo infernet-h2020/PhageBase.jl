@@ -1,6 +1,6 @@
 export @checkposint, @checknonnegint
 export fermi_dirac_prob, fermi_dirac_1mp, fermi_dirac_logp, fermi_dirac_l1mp
-export log1pexp, xlogx
+export log1pexp, xlogx, xexpx
 
 "throws an error if an argument is not a positive integer"
 macro checkposint(X::Union{Expr,Symbol}...)
@@ -31,7 +31,16 @@ end
 
 
 "x * log(x), giving zero if x == 0"
-@inline xlogx(x::Real) = x == 0 ? zero(x) : x * log(x)
+@inline xlogx(x::AbstractFloat) = x == 0 ? zero(x) : x * log(x)
+
+"x * exp(x), giving zero if x == -Inf"
+@inline xexpx(x::AbstractFloat) = x == -Inf ? zero(x) : x * exp(x)
+
+for f in (:xlogx, :xexpx)
+	@eval begin
+		($f)(x::Real) = ($f)(float(x))
+	end
+end
 
 
 "Fermi-Dirac binding probability"
