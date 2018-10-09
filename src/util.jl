@@ -1,6 +1,6 @@
 export @checkposint, @checknonnegint
 export fermi_dirac_prob, fermi_dirac_1mp, fermi_dirac_logp, fermi_dirac_l1mp
-export xlogx, xexpx, log1pexp
+export xlogx, xexpx, log1pexp, log1mexp
 
 
 "throws an error if an argument is not a positive integer"
@@ -30,6 +30,9 @@ end
 	((n - 1) * n) >> 1
 end
 
+
+#= Many of the following functions are based on StatsFuns.jl =#
+
 "x * log(x), giving zero for x = 0"
 xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
 
@@ -38,6 +41,12 @@ xexpx(x::Real) = isfinite(x) ? x * exp(x) : exp(x)
 
 "log(1+exp(x))"
 log1pexp(x::Real) = x ≤ -37. ? exp(x) : x ≤ 18. ? log1p(exp(x)) : x ≤ 33.3 ? x + exp(-x) : float(x)
+
+Base.@irrational loghalf -0.6931471805599453094 log(big(0.5))
+
+"log(1-exp(x))"
+log1mexp(x::Real) = x < loghalf ? log1p(-exp(x)) : log(-expm1(x))
+
 
 
 "Fermi-Dirac binding probability"

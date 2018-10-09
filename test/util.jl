@@ -40,6 +40,12 @@ end
 end
 
 
+@testset "log1mexp" begin
+    @test log1mexp(-1.0)  ≈ log1p(- exp(-1.0))
+    @test log1mexp(-10.0) ≈ log1p(- exp(-10.0))
+end
+
+
 @testset "Fermi Dirac binding probability" begin
     Random.seed!(119808)
     
