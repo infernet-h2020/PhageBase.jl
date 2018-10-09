@@ -34,7 +34,7 @@ end
 
     @test xlogy(2, 3) ≈ 2.0 * log(3.0)
 
-    for x = -10. : 1. : 10., y = 1. : 1. 10.
+    for x = -10:10, y = 1:10
         @test xlogy(x,y) ≈ x * log(y)
     end
 end
@@ -52,6 +52,26 @@ end
         @test xexpx(x) ≈ x * exp(x)
     end
 end
+
+
+@testset "xexpy" begin
+    @test iszero(xexpy(Inf, -Inf))
+    
+    @test isnan(xexpy(NaN, -Inf))
+    @test isnan(xexpy(NaN, 1))
+    @test isnan(xexpy(0, NaN))
+
+    @inferred xexpy(0,-Inf)
+    @inferred xexpy(1,1)
+    @inferred xexpy(1.,-Inf)
+
+    @test xexpy(2,3) ≈ 2exp(3)
+
+    for x = -10:10, y = -10:10
+        @test xexpy(x,y) ≈ x * exp(y)
+    end
+end
+
 
 
 @testset "log1pexp" begin
