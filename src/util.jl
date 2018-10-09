@@ -26,6 +26,14 @@ macro checknonnegint(X::Union{Expr,Symbol}...)
 	return esc(:($ex; $nothing))
 end
 
+
+"fast binomial(n,2)"
+@inline function binom2(n::Int)
+	@boundscheck @assert n ≥ 0
+	((n - 1) * n) >> 1
+end
+
+
 "x * exp(x), giving zero if x == -Inf"
 @inline xexpx(x::Real) = x == -Inf ? exp(x) : x * exp(x)
 
