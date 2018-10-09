@@ -1,9 +1,6 @@
-using StatsFuns
-
-
 export @checkposint, @checknonnegint
 export fermi_dirac_prob, fermi_dirac_1mp, fermi_dirac_logp, fermi_dirac_l1mp
-export log1pexp, xlogx, xexpx
+export xlogx, xexpx, log1pexp
 
 
 "throws an error if an argument is not a positive integer"
@@ -33,9 +30,14 @@ end
 	((n - 1) * n) >> 1
 end
 
+"x * log(x), giving zero for x = 0"
+xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
 
-"x * exp(x), giving zero if x == -Inf"
-@inline xexpx(x::Real) = x == -Inf ? exp(x) : x * exp(x)
+"x * exp(x), giving zero for x = -Inf"
+xexpx(x::Real) = isfinite(x) ? x * exp(x) : exp(x)
+
+"log(1+exp(x))"
+log1pexp(x::Real) = x ≤ -37. ? exp(x) : x ≤ 18. ? log1p(exp(x)) : x ≤ 33.3 ? x + exp(-x) : float(x)
 
 
 "Fermi-Dirac binding probability"
