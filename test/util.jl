@@ -47,10 +47,7 @@ end
 
 
 @testset "Fermi Dirac binding probability" begin
-    Random.seed!(119808)
-    
-    for _ = 1 : 10
-        φ = randn()
+    for φ = -10. : 1. : 10.
         p = fermi_dirac_prob(φ)
         
         @test p ≈ 1 / (1 + exp(-φ))

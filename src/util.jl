@@ -31,24 +31,6 @@ end
 end
 
 
-#= Many of the following functions are based on StatsFuns.jl =#
-
-"x * log(x), giving zero for x = 0"
-xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
-
-"x * exp(x), giving zero for x = -Inf"
-xexpx(x::Real) = isfinite(x) ? x * exp(x) : exp(x)
-
-"log(1+exp(x))"
-log1pexp(x::Real) = x ≤ -37. ? exp(x) : x ≤ 18. ? log1p(exp(x)) : x ≤ 33.3 ? x + exp(-x) : float(x)
-
-Base.@irrational loghalf -0.6931471805599453094 log(big(0.5))
-
-"log(1-exp(x))"
-log1mexp(x::Real) = x < loghalf ? log1p(-exp(x)) : log(-expm1(x))
-
-
-
 "Fermi-Dirac binding probability"
 fermi_dirac_prob(φ::Real) = 1 / (1 + exp(-φ))
 fermi_dirac_logp(φ::Real) = -log1pexp(-φ) # log(p)
@@ -67,3 +49,20 @@ for f in (:fermi_dirac_prob,
 	end
 
 end
+
+
+#= Many of the following functions are based on StatsFuns.jl =#
+
+"x * log(x), giving zero for x = 0"
+xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
+
+"x * exp(x), giving zero for x = -Inf"
+xexpx(x::Real) = isfinite(x) ? x * exp(x) : exp(x)
+
+"log(1+exp(x))"
+log1pexp(x::Real) = x ≤ -37. ? exp(x) : x ≤ 18. ? log1p(exp(x)) : x ≤ 33.3 ? x + exp(-x) : float(x)
+
+Base.@irrational loghalf -0.6931471805599453094 log(big(0.5))
+
+"log(1-exp(x))"
+log1mexp(x::Real) = x < loghalf ? log1p(-exp(x)) : log(-expm1(x))
