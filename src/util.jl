@@ -1,6 +1,6 @@
 export @checkposint, @checknonnegint
 export fermi_dirac_prob, fermi_dirac_1mp, fermi_dirac_logp, fermi_dirac_l1mp
-export xlogx, xexpx, log1pexp, log1mexp
+export xlogx, xlogy, xexpx, log1pexp, log1mexp
 
 
 "throws an error if an argument is not a positive integer"
@@ -55,6 +55,10 @@ end
 
 "x * log(x), giving zero for x = 0"
 xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
+
+"x*log(y), giving zero if x is zero and y non-negative"
+xlogy(x::T, y::T) where {T<:Real} = iszero(x) && y ≥ 0 ? float(x) : x * log(y)
+xlogy(x::Real, y::Real) = xlogy(promote(x, y)...)
 
 "x * exp(x), giving zero for x = -Inf"
 xexpx(x::Real) = isfinite(x) ? x * exp(x) : exp(x)

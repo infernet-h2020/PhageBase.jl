@@ -15,6 +15,31 @@ using Random
 end
 
 
+@testset "xlogy" begin
+    @test iszero(xlogy(0, 1))
+    @test iszero(xlogy(0, 0))
+    @test iszero(xlogy(0, Inf))
+
+    @test isnan(xlogy(NaN, 0))
+    @test isnan(xlogy(NaN, 1))
+    @test isnan(xlogy(0, NaN))
+
+    @test_throws DomainError xlogy(0, -1)
+    @test_throws DomainError xlogy(1, -1)
+    @test_throws DomainError xlogy(NaN, -1)
+    
+    @inferred xlogy(0,0)
+    @inferred xlogy(1,1)
+    @inferred xlogy(1.,0.)
+
+    @test xlogy(2, 3) ≈ 2.0 * log(3.0)
+
+    for x = -10. : 1. : 10., y = 1. : 1. 10.
+        @test xlogy(x,y) ≈ x * log(y)
+    end
+end
+
+
 @testset "xexpx" begin
     @test iszero(xexpx(-Inf))
     @test isnan(xexpx(NaN))
