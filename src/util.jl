@@ -26,17 +26,6 @@ macro checknonnegint(X::Union{Expr,Symbol}...)
 	return esc(:($ex; $nothing))
 end
 
-
-#= Now taking this stuff from StatsFuns =#
-# "accurate log(1 + exp(x))"
-# @inline function log1pexp(z::Real)
-# 	x = float(z)
-# 	x ≤ -37 ? exp(x) : x ≤ 18 ? log1p(exp(x)) : x ≤ 33.3 ? x + exp(-x) : x;
-# end
-
-# "x * log(x), giving zero if x == 0"
-# @inline xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
-
 "x * exp(x), giving zero if x == -Inf"
 @inline xexpx(x::Real) = x == -Inf ? exp(x) : x * exp(x)
 
@@ -47,11 +36,6 @@ fermi_dirac_logp(φ::Real) = -log1pexp(-φ) # log(p)
 
 fermi_dirac_1mp(φ::Real) = fermi_dirac_prob(-φ) # 1 - p
 fermi_dirac_l1mp(φ::Real) = fermi_dirac_logp(-φ) # log(1-p)
-
-# fermi_dirac_prob(μ::Real, E::Real) = fermi_dirac_prob(μ - E)
-# fermi_dirac_logp(μ::Real, E::Real) = fermi_dirac_logp(μ - E)
-# fermi_dirac_1mp(μ::Real, E::Real) = fermi_dirac_1mp(μ - E)
-# fermi_dirac_l1mp(μ::Real, E::Real) = fermi_dirac_l1mp(μ - E)
 
 
 for f in (:fermi_dirac_prob, 
