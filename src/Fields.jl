@@ -57,6 +57,9 @@ Base.length(fields::Fields) = length(fields.x)
 Base.iterate(fields::Fields, state = 1) = iterate(fields.x, state)
 Base.eltype(::Type{Fields{A,L,U}}) where {A,L,U<:Real} = @isdefined(U) ? U : Real
 
+Base.firstindex(fields::Fields) = firstindex(fields.x)
+Base.lastindex(fields::Fields) = lastindex(fields.x)
+
 
 "length of fields vector (h,J)"
 @inline function fieldslen(A::Int, L::Int)
