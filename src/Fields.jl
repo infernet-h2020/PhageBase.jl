@@ -1,4 +1,4 @@
-export Fields, get_field, field_index, set_field!, fieldslen
+export Fields, field, field!, field_index, fieldslen
 
 struct Fields{A, L, U<:Real}
     x::Vector{U}
@@ -38,32 +38,34 @@ end
 
 
 "get h[a,i]"
-function get_field(fields::Fields, a::Int, i::Int)
+function field(fields::Fields, 
+               a::Int, i::Int)
     idx = field_index(fields, a, i)
     @inbounds fields[idx]
 end
 
 "get J[a,b,i,j]"
-function get_field(fields::Fields, a::Int, b::Int, i::Int, j::Int)
+function field(fields::Fields, 
+               a::Int, b::Int, i::Int, j::Int)
     idx = field_index(fields, a, b, i, j)
     @inbounds fields[idx]    
 end
 
 
 "set h[a,i]"
-function set_field!(fields::Fields, 
-                    a::Int, i::Int, 
-                    val::Real)
+function field!(fields::Fields, 
+                a::Int, i::Int, 
+                val::Real)
     idx = field_index(fields,a,i)
-    @inbounds fields.x[idx] = val
+    @inbounds fields[idx] = val
     nothing
 end
 
 "set J[a,b,i,j]"
-function set_field!(fields::Fields, 
-                    a::Int, b::Int, i::Int, j::Int,
-                    val::Real)
+function field!(fields::Fields, 
+                a::Int, b::Int, i::Int, j::Int,
+                val::Real)
     idx = field_index(fields,a,b,i,j)
-    @inbounds fields.x[idx] = val
+    @inbounds fields[idx] = val
     nothing
 end

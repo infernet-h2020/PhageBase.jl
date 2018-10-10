@@ -18,10 +18,10 @@ using Random
         fields = Fields{A,L}([fieldsh; fieldsJ])
         
         for i = 1:L, a = 1:A
-            @test get_field(fields, a, i) == h[(a,i)]
+            @test field(fields, a, i) == h[(a,i)]
         end
         for i = 1:L, j = i+1 : L, a = 1:A, b = 1:A
-            @test get_field(fields, a, b, i, j) == J[(a,b,i,j)]
+            @test field(fields, a, b, i, j) == J[(a,b,i,j)]
         end
 
         s = rand(Sequence{A,L})

@@ -73,7 +73,6 @@ end
 end
 
 
-
 @testset "log1pexp" begin
     @test log1pexp(2.0)    ≈ log(1.0 + exp(2.0))
     @test log1pexp(-2.0)   ≈ log(1.0 + exp(-2.0))
