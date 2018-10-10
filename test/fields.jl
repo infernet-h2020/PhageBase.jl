@@ -30,5 +30,15 @@ using Random
 
         @test energy(fields, s) ≈ Hh + HJ
         @test energy(fields, FastSeq(s)) ≈ Hh + HJ
+
+
+        @test (fields[2] = 1.) == 1.
+        @test fields[2] == 1.
+
+        @test (fields[2,1] = 2.) == 2.
+        @test fields[2,1] == 2.
+
+        @test (fields[2,1,1,2] = 3.) == 3.
+        @test fields[2,1,1,2] == 3.
     end
 end
