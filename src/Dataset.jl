@@ -41,6 +41,7 @@ end
 
 
 number_of_sequences(d::Dataset) = length(d.sequences)
+diversities(d::Dataset) = diversities(d.N)
 
 
 "selectivity of each sequence in every round and replicate"
