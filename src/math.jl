@@ -21,7 +21,6 @@ log1pexp(x::Real) = x ≤ -37. ? exp(x) : x ≤ 18. ? log1p(exp(x)) : x ≤ 33.3
 log1mexp(x::Real) = x < logofhalf ? log1p(-exp(x)) : log(-expm1(x))
 
 
-#= this is called loghalf in StatsFuns, and I always got naming
-conflicts, so I renamed it here to logofhalf =#
+#= this is called loghalf in StatsFuns, and I was always getting
+name conflicts, so I renamed it here to logofhalf =#
 Base.@irrational logofhalf -0.6931471805599453094 log(big(0.5))
-
