@@ -3,6 +3,8 @@ module PhageBase
 include("util.jl")
 include("math.jl")
 
+include("fermi_dirac.jl")
+
 include("Fields.jl")
 
 include("Sequence.jl")
