@@ -24,3 +24,11 @@ log1mexp(x::Real) = x < logofhalf ? log1p(-exp(x)) : log(-expm1(x))
 #= this is called loghalf in StatsFuns, and I was always getting
 name conflicts, so I renamed it here to logofhalf =#
 Base.@irrational logofhalf -0.6931471805599453094 log(big(0.5))
+
+
+
+"fast binomial(n,2)"
+@inline function binom2(n::Int)
+	@boundscheck @assert n ≥ 0
+	((n - 1) * n) >> 1
+end

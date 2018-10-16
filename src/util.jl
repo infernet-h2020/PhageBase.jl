@@ -24,13 +24,6 @@ macro checknonnegint(X::Union{Expr,Symbol}...)
 end
 
 
-"fast binomial(n,2)"
-@inline function binom2(n::Int)
-	@boundscheck @assert n ≥ 0
-	((n - 1) * n) >> 1
-end
-
-
 """matrix of diversities. The diversity at round t
 of replicate v is defined as the number of sequences
 s for which N[s,v,t] > 0."""
