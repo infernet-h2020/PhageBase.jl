@@ -1,4 +1,18 @@
-#= Many of the following functions are based on StatsFuns.jl =#
+export binom2, 
+       xlogx, xlogy,
+       xexpx, xexpy,
+       log1pexp, log1mexp
+
+
+"fast binomial(n,2)"
+@inline function binom2(n::Int)
+	@boundscheck @assert n ≥ 0
+	((n - 1) * n) >> 1
+end
+
+
+#= Many of the following functions are based on StatsFuns.jl, with
+slight tweaks. =#
 
 "x * log(x), giving zero for x = 0"
 xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
@@ -25,10 +39,3 @@ log1mexp(x::Real) = x < logofhalf ? log1p(-exp(x)) : log(-expm1(x))
 name conflicts, so I renamed it here to logofhalf =#
 Base.@irrational logofhalf -0.6931471805599453094 log(big(0.5))
 
-
-
-"fast binomial(n,2)"
-@inline function binom2(n::Int)
-	@boundscheck @assert n ≥ 0
-	((n - 1) * n) >> 1
-end

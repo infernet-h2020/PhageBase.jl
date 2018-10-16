@@ -1,6 +1,4 @@
 export @checkposint, @checknonnegint
-export fermi_dirac_prob, fermi_dirac_1mp, fermi_dirac_logp, fermi_dirac_l1mp
-export xlogx, xlogy, xexpx, xexpy, log1pexp, log1mexp
 
 
 "throws an error if an argument is not a positive integer"
