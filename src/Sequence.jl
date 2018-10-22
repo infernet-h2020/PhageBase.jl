@@ -1,4 +1,4 @@
-export Sequence, energy
+export Sequence, energy, hamming
 
 import Random
 
@@ -58,4 +58,18 @@ function energy(fields::Fields{A,L,U}, s::Sequence{A,L}) where {A,L,U}
 	end
 
     E
+end
+
+
+"""Hamming distance between two sequneces. 
+Same as number of positions where they differ."""
+function hamming(s1::Sequence{A,L},
+				 s2::Sequence{B,L}) where {A,B,L}
+	d = 0
+	for i = 1:L
+		if s1[i] ≠ s2[i]
+			d += 1
+		end
+	end
+	return d
 end

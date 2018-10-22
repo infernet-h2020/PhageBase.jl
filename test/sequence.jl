@@ -21,6 +21,9 @@ using Random
 
     @test length(collect(SequenceIterator{4,5}())) == 4^5
     @test length(SequenceIterator{4,5}()) == 4^5
+
+    @test hamming(Sequence{4,2}(1,2), Sequence{4,2}(1,2)) == 0
+    @test hamming(Sequence{4,2}(1,2), Sequence{5,2}(2,3)) == 2
 end
 
 
