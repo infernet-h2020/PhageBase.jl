@@ -2,6 +2,8 @@ using Random
 
 @testset "Sequence" begin
 
+    @test eltype(Sequence{23,4}) == Int
+
     s = Sequence{10,10}(collect(1:10))
     for (i,a) in enumerate(s)
         @test a == i

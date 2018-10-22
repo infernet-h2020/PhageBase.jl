@@ -30,7 +30,7 @@ Base.hash(s::Sequence) = hash(s.s)
 
 Base.getindex(s::Sequence, i) = s.s[i]
 Base.length(s::Sequence) = length(s.s)
-Base.eltype(s::Type{<:Sequence}) = eltype(s.s)
+Base.eltype(s::Type{<:Sequence}) = Int
 Base.iterate(s::Sequence) = iterate(s.s)
 Base.iterate(s::Sequence, state) = iterate(s.s, state)
 
