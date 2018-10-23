@@ -8,7 +8,8 @@ struct FastSeq{A,L,FIdx}
     function FastSeq{A,L,FIdx}(s::Sequence{A,L}) where {A,L,FIdx}
         @checkposint A L FIdx
         if FIdx ≠ fidxlen(L)
-            throw(ArgumentError("FIdx=$FIdx inconsistent with L=$L; expected FIdx $(fidxlen(L::Int))"))
+            throw(ArgumentError(string("FIdx=",FIdx," inconsistent with L=",L,
+                                       "; expected ",fidxlen(L::Int))))
         end
 
         offset = 0; A2 = A^2;
