@@ -1,4 +1,4 @@
-export FastSeq
+export FastSeq, SeqAny
 
 "representation of sequence that enables fast energy computation"
 struct FastSeq{A,L,FIdx}
@@ -8,8 +8,8 @@ struct FastSeq{A,L,FIdx}
     function FastSeq{A,L,FIdx}(s::Sequence{A,L}) where {A,L,FIdx}
         @checkposint A L FIdx
         if FIdx ≠ fidxlen(L)
-            throw(ArgumentError(string("FIdx=",FIdx," inconsistent with L=",L,
-                                       "; expected ",fidxlen(L::Int))))
+            throw(ArgumentError(string("FIdx=", FIdx, " inconsistent with L=", L,
+                                       "; expected ", fidxlen(L::Int))))
         end
 
         offset = 0; A2 = A^2;
@@ -71,3 +71,7 @@ end
 	@boundscheck @checkposint L
 	binom2(L+1)
 end
+
+
+"Either of Sequence or FastSeq"
+SeqAny = Union{Sequence{A,L}, FastSeq{A,L}} where {A,L}
