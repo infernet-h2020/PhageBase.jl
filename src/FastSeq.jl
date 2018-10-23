@@ -1,5 +1,6 @@
 export FastSeq, SeqAny
 
+
 "representation of sequence that enables fast energy computation"
 struct FastSeq{A,L,FIdx}
     sequence::Sequence{A,L}
@@ -31,6 +32,7 @@ struct FastSeq{A,L,FIdx}
     end
 end
 
+
 FastSeq{A,L}(s::Sequence{A,L}) where {A,L} = FastSeq{A,L,fidxlen(L)}(s)
 FastSeq{A,L}(s::NTuple{L,Integer}) where {A,L} = FastSeq{A,L}(Sequence{A,L}(s))
 FastSeq{A,L}(s::Integer...) where {A,L} = FastSeq{A,L}(s)
@@ -41,11 +43,14 @@ FastSeq{A}(s::NTuple{L,Integer}) where {A,L} = FastSeq{A,L}(s)
 FastSeq{A}(s::Integer...) where {A} = FastSeq{A}(s)
 FastSeq{A}(s::AbstractVector{<:Integer}) where {A} = FastSeq{A}(Tuple(s))
 
+
 Base.convert(::Type{NTuple{L,Int}}, s::FastSeq{A,L}) where {A,L} = s.sequence.s
 Base.convert(::Type{Sequence{A,L}}, s::FastSeq{A,L}) where {A,L} = s.sequence
 
+
 Base.:(==)(s::FastSeq, r::FastSeq) = s.sequence == r.sequence
 Base.hash(s::FastSeq) = hash(s.sequence)
+
 
 #= TODO: I think these definitions should not be necessary. 
 This should be handled by the promotion below, but it doesn't work.
@@ -54,6 +59,7 @@ Base.:(==)(s::FastSeq, r::Sequence) = s.sequence == r
 Base.:(==)(s::Sequence, r::FastSeq) = s == r.sequence
 # Base.promote_rule(::Type{<:FastSeq}, ::Type{Sequence{A,L}}) where {A,L} = Sequence{A,L}
 # Base.:(==)(s::Union{Sequence,FastSeq}, r::Union{Sequence,FastSeq}) = ==(promote(s,r)...)
+
 
 "fast computation of energy of sequence s using 'fields' (h,J)"
 function energy(fields::Fields{A,L,U}, s::FastSeq{A,L}) where {A,L,U}
@@ -65,6 +71,7 @@ function energy(fields::Fields{A,L,U}, s::FastSeq{A,L}) where {A,L,U}
     
 	E
 end
+
 
 "length of field indices vector"
 @inline function fidxlen(L::Int)
