@@ -14,10 +14,10 @@ using Random
 
     @test hash(Sequence{3}(1,2)) == hash(Sequence{4}(1,2))
 
-    @test collect(SequencesIterator{2,3}()) == [Sequence{2}(1, 1, 1), Sequence{2}(1, 1, 2),
-                                               Sequence{2}(1, 2, 1), Sequence{2}(1, 2, 2),
-                                               Sequence{2}(2, 1, 1), Sequence{2}(2, 1, 2),
-                                               Sequence{2}(2, 2, 1), Sequence{2}(2, 2, 2)]
+    @test collect(SequencesIterator{2,3}()) == [Sequence{2}(1,1,1), Sequence{2}(1,1,2),
+                                                Sequence{2}(1,2,1), Sequence{2}(1,2,2),
+                                                Sequence{2}(2,1,1), Sequence{2}(2,1,2),
+                                                Sequence{2}(2,2,1), Sequence{2}(2,2,2)]
 
     @test length(collect(SequencesIterator{4,5}())) == 4^5
     @test length(SequencesIterator{4,5}()) == 4^5
