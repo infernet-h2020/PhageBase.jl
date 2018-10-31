@@ -18,30 +18,21 @@ FieldsChem(f::Fields{A,L,U}) where {A,L,U} = FieldsChem{A,L,U}(f.x)
 Fields(f::FieldsChem{A,L,U}) where {A,L,U} = Fields{A,L,U}(f.x)
 
 
-Base.convert(::Type{Fields{A,L,U}}, f::FieldsChem{A,L,U}) where {A,L,U} = Fields{A,L,U}(copy(f.x))
-Base.convert(::Type{FieldsChem{A,L,U}}, f::Fields{A,L,U}) where {A,L,U} = FieldsChem{A,L,U}(copy(f.x))
-Base.convert(::Type{Fields}, f::FieldsChem{A,L,U}) where {A,L,U} = convert(Fields{A,L,U}, f)
-Base.convert(::Type{FieldsChem}, f::Fields{A,L,U}) where {A,L,U} = convert(FieldsChem{A,L,U}, f)
-
-
 Base.propertynames(::FieldsChem) = (:x, :μ)
 
-Base.getproperty(fields::FieldsChem, sym::Symbol) = 
-    getproperty(fields, Val(sym))
-Base.setproperty!(fields::FieldsChem, sym::Symbol, v) = 
-    setproperty!(fields, Val(sym), v)
+
+#= so that I can dispatch on the property symbol =#
+Base.getproperty(fields::FieldsChem, sym::Symbol) = getproperty(fields, Val(sym))
+Base.setproperty!(fields::FieldsChem, sym::Symbol, v) = setproperty!(fields, Val(sym), v)
 
 
 "get the chemical potential (μ)"
-Base.getproperty(fields::FieldsChem, ::Val{:μ}) = 
-    fields[end] #TODO: @inbounds
+Base.getproperty(fields::FieldsChem, ::Val{:μ}) = fields[end] #TODO: @inbounds
 "set the chemical potential (μ)"
-Base.setproperty!(fields::FieldsChem, ::Val{:μ}, μ::Real) =
-    fields[end] = μ #TODO: @inbounds
+Base.setproperty!(fields::FieldsChem, ::Val{:μ}, μ::Real) = fields[end] = μ #TODO: @inbounds
 
 "get the fields vector"
-Base.getproperty(fields::FieldsChem, ::Val{:x}) = 
-    getfield(fields, :x) #TODO: @inbounds
+Base.getproperty(fields::FieldsChem, ::Val{:x}) = getfield(fields, :x) #TODO: @inbounds
 
 
 energy(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = energy(Fields(fields), s)
@@ -53,7 +44,8 @@ bindφ(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = fields.μ - energy
 for f in (:fermi_dirac_prob, 
 		  :fermi_dirac_logp, 
 		  :fermi_dirac_1mp, 
-		  :fermi_dirac_l1mp)
+          :fermi_dirac_l1mp)
+    
 	@eval begin
         ($f)(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = ($f)(bindφ(fields, s))
 	end
