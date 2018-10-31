@@ -5,13 +5,14 @@ include("math.jl")
 
 include("fermi_dirac.jl")
 
-include("Fields.jl")
-
-include("prior.jl")
-
 include("Sequence.jl")
 include("SequencesIterator.jl")
 include("FastSeq.jl")
+
+include("Fields.jl")
+include("FieldsChem.jl")
+
+include("prior.jl")
 
 include("Dataset.jl")
 

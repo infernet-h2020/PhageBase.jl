@@ -42,3 +42,26 @@ using Random
         @test fields[2,1,1,2] == 3.
     end
 end
+
+
+@testset "FieldsChem" begin
+    Random.seed!(42572)
+    A = rand(2:6); L = rand(2:6);
+    flen = fieldslen(A,L)
+    fields = FieldsChem{A,L}(randn(flen + 1))
+    @test fields.μ == fields[end] == fields.x[end]
+    @test length(fields) == flen + 1
+
+    oldμ = fields.μ
+    fields.μ += 1
+    @test fields.μ == oldμ + 1
+
+    f0 = Fields(fields)
+    @test f0.x === fields.x
+
+    for _ = 1:5
+        s = rand(Sequence{A,L})
+        @test energy(fields, s) == energy(f0, s)
+        @test bindφ(fields, s) == fields.μ - energy(fields, s)
+    end
+end

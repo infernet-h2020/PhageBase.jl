@@ -46,6 +46,7 @@ FastSeq{A}(s::AbstractVector{<:Integer}) where {A} = FastSeq{A}(Tuple(s))
 
 Base.convert(::Type{NTuple{L,Int}}, s::FastSeq{A,L}) where {A,L} = s.sequence.s
 Base.convert(::Type{Sequence{A,L}}, s::FastSeq{A,L}) where {A,L} = s.sequence
+Base.convert(::Type{Sequence}, s::FastSeq{A,L}) where {A,L} = s.sequence
 
 
 Base.:(==)(s::FastSeq, r::FastSeq) = s.sequence == r.sequence
@@ -59,18 +60,6 @@ Base.:(==)(s::FastSeq, r::Sequence) = s.sequence == r
 Base.:(==)(s::Sequence, r::FastSeq) = s == r.sequence
 # Base.promote_rule(::Type{<:FastSeq}, ::Type{Sequence{A,L}}) where {A,L} = Sequence{A,L}
 # Base.:(==)(s::Union{Sequence,FastSeq}, r::Union{Sequence,FastSeq}) = ==(promote(s,r)...)
-
-
-"fast computation of energy of sequence s using 'fields' (h,J)"
-function energy(fields::Fields{A,L,U}, s::FastSeq{A,L}) where {A,L,U}
-	E = zero(U)
-    
-    @inbounds @simd for f in s.fieldidx
-		E -= fields[f]
-    end
-    
-	E
-end
 
 
 "length of field indices vector"
