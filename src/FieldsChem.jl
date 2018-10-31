@@ -17,6 +17,8 @@ FieldsChem{A,L}() where {A,L} = FieldsChem{A,L,Float64}()
 FieldsChem(f::Fields{A,L,U}) where {A,L,U} = FieldsChem{A,L,U}(f.x)
 Fields(f::FieldsChem{A,L,U}) where {A,L,U} = Fields{A,L,U}(f.x)
 
+FieldsAny = Union{Fields{A,L}, FieldsChem{A,L}} where {A,L}
+
 
 Base.propertynames(::FieldsChem) = (:x, :μ)
 

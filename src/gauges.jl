@@ -7,7 +7,7 @@ export zero_sum_gauge!,
 change in μ. If length(fields) > fieldslen(A,L), this
 assumes that fields[end] is the chemical potential and
 modifies it too."""
-function zero_sum_gauge!(fields::Fields{A,L}) where {A,L}
+function zero_sum_gauge!(fields::FieldsAny{A,L}) where {A,L}
     #= This is a dumb way to do this. It can probably
     be made more efficient, but I think I never use
     this in any performance critical code.
@@ -40,7 +40,7 @@ function zero_sum_gauge!(fields::Fields{A,L}) where {A,L}
 end
 
 
-function zero_sum_gauge(fields::Fields{A,L}) where {A,L}
+function zero_sum_gauge(fields::FieldsAny)
     f = deepcopy(fields)
     zero_sum_gauge!(f)
     f
@@ -49,7 +49,7 @@ end
 
 """return true if the fields are in zero-sum gauge, or false otherwise.
 Uses atol for comparison with zero."""
-function is_zero_sum_gauge(fields::Fields{A,L}; atol=1e-10) where {A,L}
+function is_zero_sum_gauge(fields::FieldsAny{A,L}; atol=1e-10) where {A,L}
     @assert atol ≥ 0
     for i = 1:L
         if abs(sum(fields[a,i] for a=1:A)) > atol
