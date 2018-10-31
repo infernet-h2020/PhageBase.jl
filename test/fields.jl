@@ -63,5 +63,6 @@ end
         s = rand(Sequence{A,L})
         @test energy(fields, s) == energy(f0, s)
         @test bindφ(fields, s) == fields.μ - energy(fields, s)
+        @test fermi_dirac_prob(fields, s) == fermi_dirac_prob(fields.μ, energy(fields, s))
     end
 end

@@ -49,7 +49,12 @@ energy(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = energy(Fields(fiel
 "φ = μ - E"
 bindφ(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = fields.μ - energy(fields, s)
 
-fermi_dirac_prob(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = fermi_dirac_prob(bindφ(fields, s))
-fermi_dirac_logp(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = fermi_dirac_logp(bindφ(fields, s))
-fermi_dirac_1mp(fields::FieldsChem{A,L},  s::SeqAny{A,L}) where {A,L} = fermi_dirac_1mp(bindφ(fields,  s))
-fermi_dirac_l1mp(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = fermi_dirac_l1mp(bindφ(fields, s))
+
+for f in (:fermi_dirac_prob, 
+		  :fermi_dirac_logp, 
+		  :fermi_dirac_1mp, 
+		  :fermi_dirac_l1mp)
+	@eval begin
+        ($f)(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = ($f)(bindφ(fields, s))
+	end
+end

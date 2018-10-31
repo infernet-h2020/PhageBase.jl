@@ -43,7 +43,7 @@ GaussPrior(::Fields{A,L}, ηh::Real, ηJ::Real) where {A,L} = GaussPrior{A,L}(η
 
 
 "fields log prior"
-function log_prior(fields::Fields{A,L,U},
+function log_prior(fields::Union{Fields{A,L,U},FieldsChem{A,L,U}},
 				   prior::GaussPrior{A,L}
 				   ) where {A,L,U}
 	p = zero(U)
@@ -56,7 +56,7 @@ end
 
 "adds to G the gradient of the fields log prior"
 function log_prior_grad!(G::AbstractVector{Float64},
-                         fields::Fields{A,L,Float64},
+                         fields::Union{Fields{A,L},FieldsChem{A,L}},
                          prior::GaussPrior{A,L}
                          ) where {A,L,V,T}
     @assert length(G) == length(fields.x)
