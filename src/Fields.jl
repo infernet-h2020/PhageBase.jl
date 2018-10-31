@@ -119,10 +119,8 @@ end
 "fast computation of energy of sequence s using 'fields' (h,J)"
 function energy(fields::Fields{A,L,U}, s::FastSeq{A,L}) where {A,L,U}
 	E = zero(U)
-    
-    @inbounds @simd for f in s.fieldidx
+    @inbounds for f in s.fieldidx
 		E -= fields[f]
     end
-    
 	E
 end
