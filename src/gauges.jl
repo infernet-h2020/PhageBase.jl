@@ -8,8 +8,11 @@ change in μ. If length(fields) > fieldslen(A,L), this
 assumes that fields[end] is the chemical potential and
 modifies it too."""
 function zero_sum_gauge!(fields::Fields{A,L}) where {A,L}
-    #= This is super inefficient.
-    TODO: probably this can be made faster? =#
+    #= This is a dumb way to do this. It can probably
+    be made more efficient, but I think I never use
+    this in any performance critical code.
+    TODO: Probably this can be made faster? Not a priority. =#
+
     f0 = deepcopy(fields)
     for a = 1:A, b = 1:A, i = 1:L, j = i+1:L
         fields[a,b,i,j] -= (1/A)sum(f0[x,b,i,j] for x=1:A)
