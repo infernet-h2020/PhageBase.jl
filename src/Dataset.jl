@@ -1,5 +1,5 @@
 export Dataset, number_of_sequences, selectivities, avgselectivity
-export randtrain, seqcounts
+export randtrain, seqcounts, normalize_counts!
 
 
 using Random, Statistics
@@ -125,4 +125,16 @@ function randtrain(d::Dataset,
 	validdata = Dataset(d.sequences[valididx], d.N[valididx,:,:])
 
     return traindata, testsdata, validdata
+end
+
+
+"Normalize counts so that Ntot at every round equals N"
+function normalize_counts!(data::Dataset{A,L,V,T,Float64},
+						   N::Real) where {A,L,V,T}
+	@assert 0 < N < Inf
+	for t = 1:T, v = 1:V
+		N0 = sum(data.N[:,v,t])
+		data.N[:,v,t] .*= N / N0
+	end
+	nothing
 end
