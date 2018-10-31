@@ -48,7 +48,7 @@ diversities(d::Dataset) = diversities(d.N)
 function selectivities(d::Dataset)
     S,V,T = size(d.N)
     θ = d.N[:,:,2:T] ./ max.(d.N[:,:,1:T-1], one(eltype(d.N)))
-    normalization = sum(θ; dims=(1,))
+    normalization = sum(θ; dims=1)
 	θ ./ normalization
 end
 
