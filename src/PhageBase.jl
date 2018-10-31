@@ -15,4 +15,6 @@ include("FastSeq.jl")
 
 include("Dataset.jl")
 
+include("gauges.jl")
+
 end # module

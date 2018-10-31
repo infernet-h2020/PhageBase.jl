@@ -68,17 +68,21 @@ function field_index(::Fields{A,L}, a::Int, i::Int) where {A,L}
     field_index(A, L, a, i)
 end
 
-"index of J[a,b,i,j] in fields vector"
+"index of h[a,i] in fields vector"
 function field_index(::Fields{A,L}, a::Int, b::Int, i::Int, j::Int) where {A,L}
     field_index(A, L, a, b, i, j)
 end
 
+"index of J[a,b,i,j] in fields vector"
 function field_index(A::Int, L::Int, a::Int, i::Int)
-    @boundscheck @assert 1 ≤ a ≤ A && 1 ≤ i ≤ L
+    @boundscheck @assert 1 ≤ a ≤ A
+    @boundscheck @assert 1 ≤ i ≤ L
     a + (i-1)A
 end
 
+"index of J[a,b,i,j] in fields vector"
 function field_index(A::Int, L::Int, a::Int, b::Int, i::Int, j::Int)
-    @boundscheck @assert 1 ≤ a ≤ A && 1 ≤ b ≤ A && 1 ≤ i < j ≤ L
+    @boundscheck @assert 1 ≤ a ≤ A && 1 ≤ b ≤ A
+    @boundscheck @assert 1 ≤ i < j ≤ L
     a + (b-1 + L + (i-1 + binom2(j-1))A)A
 end
