@@ -11,8 +11,8 @@ export binom2,
 end
 
 
-#= Many of the following functions are based on StatsFuns.jl, with
-slight tweaks. =#
+#= Many of the following functions are based on
+StatsFuns.jl, with minor modifications. =#
 
 "x * log(x), giving zero for x = 0"
 xlogx(x::Real) = iszero(x) ? float(x) : x * log(x)
