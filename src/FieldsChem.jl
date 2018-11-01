@@ -1,11 +1,11 @@
-export FieldsChem, bindφ
+export FieldsChem, bindφ, getμ, setμ!
 
 
 "wrapper around fields vector that includes chemical potential (h,J,μ)"
 struct FieldsChem{A,L,U} <: AbstractFields{A,L,U}
     x::Vector{U}
     function FieldsChem{A,L,U}(x::AbstractVector{U}) where {A, L, U<:Real}
-        @boundscheck @assert length(x) ≥ fieldslen(A,L,) + 1
+        @boundscheck @assert length(x) == fieldslen(A,L,) + 1
         new(x)
     end
 end
@@ -20,27 +20,15 @@ Fields(f::FieldsChem{A,L,U}) where {A,L,U} = Fields{A,L,U}(f.x)
 FieldsAny = Union{Fields{A,L}, FieldsChem{A,L}} where {A,L}
 
 
-Base.propertynames(::FieldsChem) = (:x, :μ)
-
-
-#= so that I can dispatch on the property symbol =#
-Base.getproperty(fields::FieldsChem, sym::Symbol) = getproperty(fields, Val(sym))
-Base.setproperty!(fields::FieldsChem, sym::Symbol, v) = setproperty!(fields, Val(sym), v)
-
-
 "get the chemical potential (μ)"
-Base.getproperty(fields::FieldsChem, ::Val{:μ}) = fields[end] #TODO: @inbounds
+getμ(fields::FieldsChem) = fields[end] # TODO: @inbounds
 "set the chemical potential (μ)"
-Base.setproperty!(fields::FieldsChem, ::Val{:μ}, μ::Real) = fields[end] = μ #TODO: @inbounds
-
-"get the fields vector"
-Base.getproperty(fields::FieldsChem, ::Val{:x}) = getfield(fields, :x) #TODO: @inbounds
-
+setμ!(fields::FieldsChem, μ::Real) = fields[end] = μ
 
 energy(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = energy(Fields(fields), s)
 
 "φ = μ - E"
-bindφ(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = fields.μ - energy(fields, s)
+bindφ(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = getμ(fields) - energy(fields, s)
 
 
 for f in (:fermi_dirac_prob, 

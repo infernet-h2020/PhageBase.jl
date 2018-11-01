@@ -3,11 +3,8 @@ export zero_sum_gauge!,
        is_zero_sum_gauge
 
 
-"""transforms fields to zero-sum gauge, returning the
-change in μ. If length(fields) > fieldslen(A,L), this
-assumes that fields[end] is the chemical potential and
-modifies it too."""
-function zero_sum_gauge!(fields::FieldsAny{A,L}) where {A,L}
+"""transforms fields to zero-sum gauge, returning the change in μ."""
+function zero_sum_gauge!(fields::Fields{A,L}) where {A,L}
     #= This is a dumb way to do this. It can probably
     be made more efficient, but I think I never use
     this in any performance critical code.
@@ -30,13 +27,16 @@ function zero_sum_gauge!(fields::FieldsAny{A,L}) where {A,L}
             fields[a,i] -= (1/A^2)sum(f0[x,y,j,i] for x=1:A, y=1:A, j=1:i-1)
         end
     end
-    flen = fieldslen(A,L)
-    Δμ = (1/A)sum(f0[a,i] for a=1:A, i=1:L)
-    Δμ += (1/A^2)sum(f0[a,b,i,j] for a=1:A, b=1:A, i=1:L for j=i+1:L)
-    if length(fields) > flen
-        fields[flen + 1] += Δμ
-    end
-    Δμ
+end
+
+
+"""transforms fields to zero-sum gauge, changing also μ."""
+function zero_sum_gauge!(fields::FieldsChem{A,L}) where {A,L}
+    Δμ = (1/A)sum(fields[a,i] for a=1:A, i=1:L)
+    Δμ += (1/A^2)sum(fields[a,b,i,j] for a=1:A, b=1:A, i=1:L for j=i+1:L)
+    zero_sum_gauge!(Fields(fields))
+    setμ!(fields, getμ(fields) + Δμ)
+    nothing
 end
 
 

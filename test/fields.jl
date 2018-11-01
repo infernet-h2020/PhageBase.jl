@@ -49,12 +49,12 @@ end
     A = rand(2:6); L = rand(2:6);
     flen = fieldslen(A,L)
     fields = FieldsChem{A,L}(randn(flen + 1))
-    @test fields.μ == fields[end] == fields.x[end]
+    @test getμ(fields) == fields[end] == fields.x[end]
     @test length(fields) == flen + 1
 
-    oldμ = fields.μ
-    fields.μ += 1
-    @test fields.μ == oldμ + 1
+    oldμ = getμ(fields)
+    setμ!(fields, getμ(fields) + 1)
+    @test getμ(fields) == oldμ + 1
 
     f0 = Fields(fields)
     @test f0.x === fields.x
@@ -62,7 +62,7 @@ end
     for _ = 1:5
         s = rand(Sequence{A,L})
         @test energy(fields, s) == energy(f0, s)
-        @test bindφ(fields, s) == fields.μ - energy(fields, s)
-        @test fermi_dirac_prob(fields, s) == fermi_dirac_prob(fields.μ, energy(fields, s)) == fermi_dirac_prob(bindφ(fields, s))
+        @test bindφ(fields, s) == getμ(fields) - energy(fields, s)
+        @test fermi_dirac_prob(fields, s) == fermi_dirac_prob(getμ(fields), energy(fields, s)) == fermi_dirac_prob(bindφ(fields, s))
     end
 end
