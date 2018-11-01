@@ -1,5 +1,5 @@
 export Dataset, number_of_sequences, selectivities, avgselectivity
-export randtrain, seqcounts, normalize_counts!
+export randtrain, seqcounts, normalize_counts!, scale_counts!
 
 
 using Random, Statistics
@@ -137,4 +137,13 @@ function normalize_counts!(data::Dataset{A,L,V,T,Float64},
 		data.N[:,v,t] .*= N / N0
 	end
 	nothing
+end
+
+
+"Scale all counts by a constant factor"
+function scale_counts!(data::Dataset, C::Real) where {A,L,V,T}
+	@assert 0 < C < Inf
+	for idx in eachindex(data.N)
+		data.N[idx] *= C
+	end
 end
