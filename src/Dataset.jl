@@ -1,4 +1,6 @@
-export Dataset, number_of_sequences, selectivities, avgselectivity
+export Dataset, number_of_sequences
+export selectivities, mean_selectivities,
+	   enrichments_freq, enrichments_fold
 export randtrain, seqcounts, normalize_counts!, scale_counts!
 
 
@@ -44,18 +46,45 @@ number_of_sequences(d::Dataset) = length(d.sequences)
 diversities(d::Dataset) = diversities(d.N)
 
 
-"selectivity of each sequence in every round and replicate"
-function selectivities(d::Dataset)
-    S,V,T = size(d.N)
-    θ = d.N[:,:,2:T] ./ max.(d.N[:,:,1:T-1], one(eltype(d.N)))
-    normalization = sum(θ; dims=1)
-	θ ./ normalization
+"""frequency enrichment ratios of each sequence
+in every round and replicates"""
+function enrichments_freq(d::Dataset)
+	S,V,T = size(d.N)
+	enrich = enrichments_fold(d)
+	# normalize by total counts in each round to get frequency ratios
+	enrich .* sum(d.N[:,:,1:T-1]; dims=1) / sum(d.N[:,:,2:T]; dims=1)
 end
 
 
-"average selectivity of each sequence"
-function avgselectivity(data::Dataset)
-	θ = selectivities(data)
+"""fold enrichment ratios of each sequence
+in every round and replicates"""
+function enrichments_fold(d::Dataset)
+	S,V,T = size(d.N)
+	enrich = zeros(S,V,T-1)
+	for t = 1:T-1, v = 1:V, s = 1:S
+		if iszero(d.N[s,v,t]) && iszero(d.N[s,v,t+1])
+			enrich[s,v,t] = 0.
+		else
+			enrich[s,v,t] = d.N[s,v,t+1] / d.N[s,v,t]
+		end
+	end
+	return enrich
+end
+
+
+"""selectivities as defined in Eq. (1) of Boyer et al 2016 PNAS,
+except that we divide by library size to obtain a quantity that is
+approximately independent of library size"""
+function selectivities(d::Dataset)
+	enrich = enrichments_fold(d)
+	θ = enrich ./ sum(enrich; dims=1)  # Eq. (1) of Boyer et al 2016 PNAS
+	θ .* length(d.sequences) # divide by library size
+end
+
+
+"""mean selectivities of each sequence over all rounds and replicates"""
+function mean_selectivities(d::Dataset)
+	θ = selectivities(d)
 	vec(mean(θ; dims=(2,3)))
 end
 
@@ -71,7 +100,7 @@ function seqcounts(data::Dataset{A,L,V,T,C},
 		if s == 0
 			return N
 		else
-			for t=1:T, v=1:V
+			for t = 1:T, v = 1:V
 				N[1,v,t] += data.N[s,v,t]
 			end
 		end
