@@ -27,7 +27,7 @@ struct Dataset{A, L, V, T, C<:Real}
 		@checkposint A L V T
 		S = length(sequences)
 		if size(N) ≠ (S,V,T)
-			throw(ArgumentError("bad N shape; got $(size(N)), expected ($S,$V,$T)"))
+			throw(ArgumentError(string("bad N shape; got ", size(N), ", expected ", (S,V,T))))
 		elseif !all(n-> 0 ≤ n < Inf, N)
 			throw(ArgumentError("counts must be non-negative and finite"))
 		end
@@ -137,7 +137,8 @@ function randtrain(d::Dataset,
 	S = length(d.sequences)
 
 	if trainsize < 0 || testssize < 0 || trainsize + testssize > S
-		throw(ArgumentError("cannot satisfy trainsize ($trainsize) and testssize ($testsize) with $S sequences"))
+		throw(ArgumentError(string("cannot satisfy trainsize ", trainsize, " and testssize ",
+								   testssize, " with ", S, " sequences")))
 	end
 
     P = Random.randperm(S)
