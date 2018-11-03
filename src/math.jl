@@ -1,7 +1,8 @@
 export binom2, 
        xlogx, xlogy,
        xexpx, xexpy,
-       log1pexp, log1mexp
+       log1pexp, log1mexp,
+       midpoint
 
 
 "fast binomial(n,2)"
@@ -39,3 +40,28 @@ log1mexp(x::Real) = x < logofhalf ? log1p(-exp(x)) : log(-expm1(x))
 name conflicts, so I renamed it here to logofhalf =#
 Base.@irrational logofhalf -0.6931471805599453094 log(big(0.5))
 
+
+"""midpoint of the interval [a,b]"""
+function midpoint(a::Float64, b::Float64)
+    #= Based on F. Goualard. 2014, Table VII
+    DOI: 10.1145/2493882 =#
+
+    if !(a ≤ b)
+        return NaN
+    elseif a == -Inf
+        if b == Inf
+            return 0.
+        else
+            return nextfloat(-Inf)
+        end
+    elseif b == Inf
+        return prevfloat(Inf)
+    end
+    
+    mid = 0.5*(a + b)
+    if isfinite(mid)
+        return mid
+    else
+        return 0.5 * a + 0.5 * b
+    end
+end

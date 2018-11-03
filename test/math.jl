@@ -86,3 +86,22 @@ end
     @test log1mexp(-1.0) ≈ log1p(-exp(-1.0))
     @test log1mexp(-10.0) ≈ log1p(-exp(-10.0))
 end
+
+
+@testset "midpoint" begin
+    @test iszero(midpoint(-Inf, Inf))
+    @test iszero(midpoint(-1., 1.))
+    @test iszero(midpoint(nextfloat(-Inf), prevfloat(Inf)))
+
+    @test isnan(midpoint(NaN, 1.))
+    @test isnan(midpoint(1., NaN))
+    @test isnan(midpoint(NaN, NaN))
+    @test isnan(midpoint(1., -1.))
+    @test isnan(midpoint(1., -Inf))
+    @test isnan(midpoint(Inf, 1.))
+    @test isnan(midpoint(Inf, -Inf))
+
+    @test 1. ≤ midpoint(1., 1. + eps()) ≤ 1. + eps()
+    @test 1. ≤ midpoint(1., Inf) == prevfloat(Inf) ≤ Inf
+    @test -Inf ≤ midpoint(-Inf, 1.) == nextfloat(-Inf) ≤ 1.
+end
