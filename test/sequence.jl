@@ -26,6 +26,9 @@ using Random
     @test hamming(Sequence{4,2}(1,2), Sequence{5,2}(2,3)) == 2
 
     @test collect(Sequence{3,3}(1,2,3)) == [1,2,3]
+
+    @test Sequence{3}(1,2,3) ≤ Sequence{3}(2,2,3)
+    @test Sequence{3}(1,2,2) < Sequence{3}(3,3,3)
 end
 
 

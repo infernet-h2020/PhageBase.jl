@@ -1,7 +1,8 @@
 export Dataset, number_of_sequences
 export selectivities, mean_selectivities,
 	   enrichments_freq, enrichments_fold
-export randtrain, seqcounts, normalize_counts!, scale_counts!
+export randtrain, seqcounts, normalize_counts!, scale_counts!,
+	   subdata, randsplit
 
 
 using Random, Statistics
@@ -108,25 +109,33 @@ function seqcounts(data::Dataset{A,L,V,T,C},
 end
 
 
+"""randomly split a list of length 'len' into sublists of lengths
+'sublens'. Returns lists of indices into the list to effect the splitting."""
+function randsplit(len::Int, sublens::Int...)
+	@assert sum(sublens) == len
+	for sublen in sublens @assert sublen ≥ 0 end
+	P = randperm(len)
+	offset = 0
+	[P[offset + 1 : (offset += sublen)] for (i, sublen) in enumerate(sublens)]
+end
+
+
+"dataset corresponding to sequence indices idx"
+subdata(d::Dataset, idx::AbstractVector{Int}) = Dataset(d.sequences[idx], d.N[idx,:,:])
+
+
 "splits data into training and test datasets"
 function randtrain(d::Dataset,
 				   trainsize::Integer)
 	S = length(d.sequences)
-	if !(0 ≤ trainsize ≤ S)
-		throw(ArgumentError("trainsize ($trainsize) negative or larger than number of sequences ($S)"))
-	end
+	@assert 0 ≤ trainsize ≤ S
 
-	P = Random.randperm(S)
+	trainidx, testsidx = randsplit(S, trainsize, S - trainsize)
 
-	trainidx = P[1 : trainsize]
-	testsidx = P[trainsize + 1 : end]
+	traindata = subdata(d, trainidx)
+	testsdata = subdata(d, testsidx)
 
-	@assert length(trainidx) == trainsize
-
-	traindata = Dataset(d.sequences[trainidx], d.N[trainidx,:,:])
-	testsdata = Dataset(d.sequences[testsidx], d.N[testsidx,:,:])
-
-    return traindata, testsdata
+	traindata, testsdata
 end
 
 
@@ -135,26 +144,16 @@ function randtrain(d::Dataset,
 				   trainsize::Integer,
 				   testssize::Integer)
 	S = length(d.sequences)
+	@assert trainsize ≥ 0 && testssize ≥ 0 && trainsize + testssize ≤ S
 
-	if trainsize < 0 || testssize < 0 || trainsize + testssize > S
-		throw(ArgumentError(string("cannot satisfy trainsize ", trainsize, " and testssize ",
-								   testssize, " with ", S, " sequences")))
-	end
+	trainidx, testsidx, valididx = randsplit(S, trainsize, testssize, 
+											 S - trainsize - testssize)
 
-    P = Random.randperm(S)
+	traindata = subdata(d, trainidx)
+	testsdata = subdata(d, testsidx)
+	validdata = subdata(d, valididx)
 
-    trainidx = P[1 : trainsize]
-	testsidx = P[trainsize + 1 : trainsize + testssize]
-	valididx = P[trainsize + testssize + 1 : end]
-
-	@assert length(trainidx) == trainsize
-	@assert length(testsidx) == testssize
-
-	traindata = Dataset(d.sequences[trainidx], d.N[trainidx,:,:])
-	testsdata = Dataset(d.sequences[testsidx], d.N[testsidx,:,:])
-	validdata = Dataset(d.sequences[valididx], d.N[valididx,:,:])
-
-    return traindata, testsdata, validdata
+	traindata, testsdata, validdata
 end
 
 
