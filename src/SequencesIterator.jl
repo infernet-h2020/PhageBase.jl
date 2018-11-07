@@ -10,7 +10,7 @@ end
 
 function Base.iterate(::SequencesIterator{A,L}) where {A,L}
 	state = ones(Int,L)
-	return (Sequence{A,L}(state), state)
+	(Sequence{A,L}(state), state)
 end
 
 function Base.iterate(::SequencesIterator{A,L}, state::Vector{Int}) where {A,L}

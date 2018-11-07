@@ -31,7 +31,7 @@ Base.hash(s::Sequence) = hash(s.s)
 
 function Base.isless(s1::Sequence{A,L},
 					 s2::Sequence{B,L}) where {A,B,L}
-	for i = 1:L
+	@inbounds for i = 1:L
 		if s1[i] < s2[i]
 			return true
 		elseif s1[i] > s2[i]
@@ -61,7 +61,7 @@ Same as number of positions where they differ."""
 function hamming(s1::Sequence{A,L},
 				 s2::Sequence{B,L}) where {A,B,L}
 	d = 0
-	for i = 1:L
+	@inbounds for i = 1:L
 		if s1[i] ≠ s2[i]
 			d += 1
 		end

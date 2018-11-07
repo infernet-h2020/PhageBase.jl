@@ -19,37 +19,37 @@ Fields{A,L}() where {A,L} = Fields{A,L,Float64}()
 
 
 "gets field at linear index idx"
-Base.getindex(fields::AbstractFields, idx::Int) = fields.x[idx]
+Base.getindex(fields::AbstractFields, idx::Int) = @inbounds fields.x[idx]
 
 "sets the field at linear index idx"
 Base.setindex!(fields::AbstractFields, value::Real, 
-               idx::Int) = fields.x[idx] = value
+               idx::Int) = @inbounds fields.x[idx] = value
 
 "get h[a,i]"
 function Base.getindex(fields::AbstractFields, a::Int, i::Int)
     idx = field_index(fields, a, i)
-    fields[idx]
+    @inbounds fields[idx]
 end
 
 "get J[a,b,i,j]"
 function Base.getindex(fields::AbstractFields, 
                        a::Int, b::Int, i::Int, j::Int)
     idx = field_index(fields, a, b, i, j)
-    fields[idx]
+    @inbounds fields[idx]
 end
 
 "set h[a,i]"
 function Base.setindex!(fields::AbstractFields, value::Real, 
                         a::Int, i::Int)
     idx = field_index(fields, a, i)
-    fields[idx] = value
+    @inbounds fields[idx] = value
 end
 
 "set J[a,b,i,j]"
 function Base.setindex!(fields::AbstractFields, value::Real,
                         a::Int, b::Int, i::Int, j::Int)
     idx = field_index(fields, a, b, i, j)
-    fields[idx] = value
+    @inbounds fields[idx] = value
 end
 
 

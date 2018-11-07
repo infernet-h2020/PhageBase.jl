@@ -16,8 +16,7 @@ struct GaussPrior{A,L} <: FieldsPrior{A,L}
 end
 
 
-function GaussPrior{A,L}(ηh::Real, 
-                         ηJ::Real) where {A,L}
+function GaussPrior{A,L}(ηh::Real, ηJ::Real) where {A,L}
 	@checkposint A L
 	@assert 0 ≤ ηh < Inf
 	@assert 0 ≤ ηJ < Inf
@@ -47,7 +46,7 @@ function log_prior(fields::Union{Fields{A,L,U},FieldsChem{A,L,U}},
 				   prior::GaussPrior{A,L}
 				   ) where {A,L,U}
 	p = zero(U)
-	for f = 1 : fieldslen(A,L)
+	@inbounds for f = 1 : length(prior.η)
 		p -= prior.η[f] * fields[f]^2
 	end
 	p/2
@@ -59,8 +58,8 @@ function log_prior_grad!(G::AbstractVector{Float64},
                          fields::Union{Fields{A,L},FieldsChem{A,L}},
                          prior::GaussPrior{A,L}
                          ) where {A,L,V,T}
-    @assert length(G) == length(fields.x)
-    for f = 1 : length(prior.η)    # TODO: @inbounds
+    @boundscheck @assert length(G) == length(fields.x)
+    @inbounds for f = 1 : length(prior.η)
         G[f] -= prior.η[f] * fields[f]
     end
     nothing
@@ -72,8 +71,8 @@ function log_prior_hess!(H::AbstractMatrix{Float64},
                          prior::GaussPrior{A,L}
                          ) where {A,L}
     flen = fieldslen(A,L)
-    @assert size(H,1) == size(H,2) ≥ flen
-    for f = 1 : flen    # TODO: @inbounds
+    @boundscheck @assert size(H,1) == size(H,2) ≥ flen
+    @inbounds for f = 1 : flen
         H[f,f] -= prior.η[f]
     end
     nothing
