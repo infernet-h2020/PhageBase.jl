@@ -1,4 +1,5 @@
-export Sequence, energy, hamming
+export Sequence, energy, hamming,
+	   subseq, seqinsert
 
 import Random
 
@@ -74,4 +75,14 @@ end
 function subseq(s::Sequence{A,L}, i1::Int, i2::Int) where {A,L}
 	@assert 0 < i1 < i2 ≤ L
 	Sequence{A}(s.s[i1:i2])
+end
+
+
+"replace positions i0, i0+1, ..., i0+L1-1 in seq0 by seq1"
+function seqinsert(seq0::Sequence{A,L}, i0::Int,
+				   seq1::Sequence{A,L1}) where {A,L,L1}
+	@assert 1 ≤ i0 ≤ L
+	@assert i0 + L1 - 1 ≤ L
+	snew = tuplejoin(seq0.s[1:i0-1], seq1.s, seq0.s[i0+L1:L])
+	Sequence{A,L}(snew)
 end

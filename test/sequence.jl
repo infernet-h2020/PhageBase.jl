@@ -29,6 +29,9 @@ using Random
 
     @test Sequence{3}(1,2,3) ≤ Sequence{3}(2,2,3)
     @test Sequence{3}(1,2,2) < Sequence{3}(3,3,3)
+
+    @test subseq(Sequence{3}(1,2,3), 1, 2) == Sequence{3}(1,2)
+    @test seqinsert(Sequence{3}(1,2,3), 1, Sequence{3}(3,3)) == Sequence{3}(3,3,3)
 end
 
 
