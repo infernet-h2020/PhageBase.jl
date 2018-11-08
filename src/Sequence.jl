@@ -68,3 +68,10 @@ function hamming(s1::Sequence{A,L},
 	end
 	return d
 end
+
+
+"subsequence of s, from position i1 to i2"
+function subseq(s::Sequence{A,L}, i1::Int, i2::Int)
+	@assert 0 < i1 < i2 ≤ L
+	Sequence{A}(s.s[i1:i2])
+end
