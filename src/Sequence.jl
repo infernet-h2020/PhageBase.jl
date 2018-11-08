@@ -71,7 +71,7 @@ end
 
 
 "subsequence of s, from position i1 to i2"
-function subseq(s::Sequence{A,L}, i1::Int, i2::Int)
+function subseq(s::Sequence{A,L}, i1::Int, i2::Int) where {A,L}
 	@assert 0 < i1 < i2 ≤ L
 	Sequence{A}(s.s[i1:i2])
 end
