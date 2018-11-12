@@ -57,8 +57,11 @@ function Random.rand(rng::Random.AbstractRNG,
 end
 
 
-"""Hamming distance between two sequences. 
-Same as number of positions where they differ."""
+"""
+	hamming(s1, s2)
+
+Hamming distance between two sequences.
+"""
 function hamming(s1::Sequence{A,L},
 				 s2::Sequence{B,L}) where {A,B,L}
 	d = 0
