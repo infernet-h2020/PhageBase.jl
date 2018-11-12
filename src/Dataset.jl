@@ -81,9 +81,13 @@ function enrichments_fold(d::Dataset)
 end
 
 
-"""selectivities as defined in Eq. (1) of Boyer et al 2016 PNAS,
+"""
+	selectivities(data)
+
+selectivities as defined in Eq. (1) of Boyer et al 2016 PNAS,
 except that we divide by library size to obtain a quantity that is
-approximately independent of library size"""
+approximately independent of library size
+"""
 function selectivities(d::Dataset)
 	enrich = enrichments_fold(d)
 	θ = enrich ./ sum(enrich; dims=1)  # Eq. (1) of Boyer et al 2016 PNAS
@@ -91,11 +95,12 @@ function selectivities(d::Dataset)
 end
 
 
-"""mean selectivities of each sequence over all rounds and replicates"""
-function mean_selectivities(d::Dataset)
-	θ = selectivities(d)
-	vec(mean(θ; dims=(2,3)))
-end
+"""
+	mean_selectivities(data)
+
+mean selectivities of each sequence over all rounds and replicates
+"""
+mean_selectivities(d::Dataset) = vec(mean(selectivities(d); dims=(2,3)))
 
 
 "extracts the counts of a sequence from a dataset"
