@@ -47,8 +47,12 @@ number_of_sequences(d::Dataset) = length(d.sequences)
 diversities(d::Dataset) = diversities(d.N)
 
 
-"""frequency enrichment ratios of each sequence
-in every round and replicates"""
+"""
+	enrychments_freq(data)
+
+frequency enrichment ratios of each sequence
+in every round and replicates
+"""
 function enrichments_freq(d::Dataset)
 	S,V,T = size(d.N)
 	enrich = enrichments_fold(d)
@@ -57,8 +61,12 @@ function enrichments_freq(d::Dataset)
 end
 
 
-"""fold enrichment ratios of each sequence
-in every round and replicates"""
+"""
+	enrichments_fold(data)
+
+fold enrichment ratios of each sequence
+in every round and replicates
+"""
 function enrichments_fold(d::Dataset)
 	S,V,T = size(d.N)
 	enrich = zeros(S,V,T-1)
