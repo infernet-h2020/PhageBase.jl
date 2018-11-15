@@ -24,8 +24,8 @@ end
 
 """matrix of diversities. The diversity at round t
 of replicate v is defined as the number of sequences
-s for which N[s,v,t] > 0."""
-diversities(N::AbstractArray{<:Real, 3}) = sum(x -> x > 0, N; dims=1)
+s for which counts[s,v,t] > 0."""
+diversities(counts::AbstractArray{<:Real, 3}) = sum(x -> x > 0, counts; dims=1)
 
 
 # https://github.com/JuliaLang/julia/issues/23277#issuecomment-322828753
