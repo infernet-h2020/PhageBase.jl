@@ -18,4 +18,6 @@ include("Dataset.jl")
 
 include("gauges.jl")
 
+include("clean.jl")
+
 end # module
