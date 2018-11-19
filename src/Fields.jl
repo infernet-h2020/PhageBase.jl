@@ -1,4 +1,4 @@
-export Fields, field_index, fieldslen
+export AbstractFields, Fields, field_index, fieldslen
 
 
 abstract type AbstractFields{A,L,U<:Real} end
