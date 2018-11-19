@@ -58,9 +58,11 @@ in every round and replicates
 """
 function enrichments_freq(d::Dataset)
 	S,V,T = size(d.counts)
-	enrich = enrichments_fold(d)
+	freq = d.counts ./ sum(d.counts; dims=1) # sequence frequencies per round
+	freq[:,:,2:T] ./ freq[:,:,1:T-1]	
+	#enrich = enrichments_fold(d)
 	# normalize by total counts in each round to get frequency ratios
-	enrich .* sum(d.counts[:,:,1:T-1]; dims=1) / sum(d.counts[:,:,2:T]; dims=1)
+	#enrich .* sum(d.counts[:,:,1:T-1]; dims=1) / sum(d.counts[:,:,2:T]; dims=1)
 end
 
 
@@ -72,15 +74,16 @@ in every round and replicates
 """
 function enrichments_fold(d::Dataset)
 	S,V,T = size(d.counts)
-	enrich = zeros(S,V,T-1)
-	for t = 1:T-1, v = 1:V, s = 1:S
-		if iszero(d.counts[s,v,t]) && iszero(d.counts[s,v,t+1])
-			enrich[s,v,t] = 0.
-		else
-			enrich[s,v,t] = d.counts[s,v,t+1] / d.counts[s,v,t]
-		end
-	end
-	return enrich
+	d.counts[:,:,2:T] ./ d.counts[:,:,1:T-1]
+	# enrich = zeros(S,V,T-1)
+	# for t = 1:T-1, v = 1:V, s = 1:S
+	# 	if iszero(d.counts[s,v,t]) && iszero(d.counts[s,v,t+1])
+	# 		enrich[s,v,t] = 0.
+	# 	else
+	# 		enrich[s,v,t] = d.counts[s,v,t+1] / d.counts[s,v,t]
+	# 	end
+	# end
+	# return enrich
 end
 
 
@@ -88,13 +91,23 @@ end
 	selectivities(data)
 
 selectivities as defined in Eq. (1) of Boyer et al 2016 PNAS,
-except that we divide by library size to obtain a quantity that is
+except that we multiply by library size to obtain a quantity that is
 approximately independent of library size
 """
 function selectivities(data::Dataset)
+	S, V, T = size(data.counts)
+	freq = data.counts ./ sum(data.counts; dims=1)
+	sel = freq[:,:,2:T] ./ freq[:,:,1:T-1]
 	enrich = enrichments_fold(data)
-	θ = enrich ./ sum(enrich; dims=1)  # Eq. (1) of Boyer et al 2016 PNAS
-	θ .* length(data.sequences) # divide by library size
+
+	#= Eq. (1) of Boyer et al 2016 PNAS.
+	sequences not present at round t are given an θ = NaN at round t. =#
+	θ = enrich ./ sum(x -> isnan(x) ? 0. : x, enrich; dims=1)
+	
+	#= By multiplying by library size, we get a quantity that can
+	be compared across multiple libraries. For example, we can put
+	train and test data in the same scatter plot. =#
+	θ .* length(data.sequences)
 end
 
 
@@ -102,10 +115,33 @@ end
 	mean_selectivities(data)
 
 mean selectivities of each sequence over all
-rounds and replicates
+rounds and replicates, ignoring NaNs
 """
-mean_selectivities(data::Dataset) =
-	vec(mean(selectivities(data); dims=(2,3)))
+function mean_selectivities(data::Dataset)
+	S, V, T = size(data.counts)
+	θ = selectivities(data)
+	θavg = zeros(S)
+	for s = 1:S
+		if all(isnan, θ[s,:,:])
+			θavg[s] = NaN
+		else
+			θavg[s] = mean(x for x in θ[s,:,:] if !isnan(x))
+		end
+	end
+	θavg
+end
+
+
+"""
+	enrichscores(data, wt)
+
+Functional scores as defined by Rubin et al 2017 Gen. Bio.,
+where wt is the index of the wildtype sequence in data.sequences.
+"""
+function enrichscores(data::Dataset, wt::Int)
+	@assert 1 ≤ wt ≤ length(data.sequences)
+	@assert false # TODO: implement
+end
 
 
 "extracts the counts of a sequence from a dataset"
@@ -211,7 +247,7 @@ end
 
 
 "Scale all counts by a constant factor"
-function scale_counts!(data::Dataset, C::Real) where {A,L,V,T}
+function scale_counts!(data::Dataset, C::Real)
 	@assert 0 < C < Inf
 	for idx in eachindex(data.counts)
 		data.counts[idx] *= C
