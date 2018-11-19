@@ -9,10 +9,12 @@
         prior = GaussPrior{A,L}(η)
         @test all(x -> x == η, prior.η)
         @test length(prior.η) == flen
+        
         randn!(prior.η)
+        randn!(prior.ξ)
 
         fields = Fields{A,L}(randn(flen + 1))
-        @test log_prior(fields, prior) ≈ -0.5sum(prior.η .* fields.x[1:flen] .* fields.x[1:flen])
+        @test log_prior(fields, prior) ≈ -0.5sum(prior.η .* (fields.x[1:flen] .- prior.ξ) .* (fields.x[1:flen] .- prior.ξ))
 
         f(x) = log_prior(Fields{A,L}(x), prior)
         Gad = ForwardDiff.gradient(f, fields.x)
