@@ -50,8 +50,7 @@ GaussPrior(::Fields{A,L}, ηh::Real, ηJ::Real) where {A,L} = GaussPrior{A,L}(η
 
 "fields log prior"
 function log_prior(fields::Union{Fields{A,L,U},FieldsChem{A,L,U}},
-				   prior::GaussPrior{A,L}
-				   ) where {A,L,U}
+				   prior::GaussPrior{A,L}) where {A,L,U}
 	p = zero(U)
 	@inbounds for f = 1 : length(prior.η)
 		p -= prior.η[f] * (fields[f] - prior.ξ[f])^2
@@ -63,8 +62,7 @@ end
 "adds to G the gradient of the fields log prior"
 function log_prior_grad!(G::AbstractVector{Float64},
                          fields::Union{Fields{A,L},FieldsChem{A,L}},
-                         prior::GaussPrior{A,L}
-                         ) where {A,L,V,T}
+                         prior::GaussPrior{A,L}) where {A,L,V,T}
     @boundscheck @assert length(G) == length(fields.x)
     @inbounds for f = 1 : length(prior.η)
         G[f] -= prior.η[f] * (fields[f] - prior.ξ[f])
@@ -75,8 +73,7 @@ end
 
 "adds to H the Hessian of the fields log prior"
 function log_prior_hess!(H::AbstractMatrix{Float64},
-                         prior::GaussPrior{A,L}
-                         ) where {A,L}
+                         prior::GaussPrior{A,L}) where {A,L}
     flen = fieldslen(A,L)
     @boundscheck @assert size(H,1) == size(H,2) ≥ flen
     @inbounds for f = 1 : flen
