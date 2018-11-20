@@ -19,7 +19,7 @@ Fields{A,L}() where {A,L} = Fields{A,L,Float64}()
 
 
 "gets field at linear index idx"
-Base.getindex(fields::AbstractFields, idx::Int) = @inbounds fields.x[idx]
+Base.getindex(fields::AbstractFields, idx::Int) = fields.x[idx]
 
 "sets the field at linear index idx"
 Base.setindex!(fields::AbstractFields, value::Real, 
