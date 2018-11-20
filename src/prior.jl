@@ -8,7 +8,8 @@ abstract type FieldsPrior{A,L} end
 struct GaussPrior{A,L} <: FieldsPrior{A,L}
     η::Vector{Float64}  # regularization weight (= 1 / prior variance)
     ξ::Vector{Float64}  # center of the Guassian prior
-	function GaussPrior{A,L}(η::AbstractVector{Float64}, ξ::AbstractVector{Float64}) where {A,L}
+    function GaussPrior{A,L}(η::AbstractVector{Float64},
+                             ξ::AbstractVector{Float64}) where {A,L}
 		@checkposint A L
 		@assert length(η) == length(ξ) == fieldslen(A,L)
         for x in η @assert 0 ≤ x < Inf end
