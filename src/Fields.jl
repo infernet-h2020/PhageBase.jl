@@ -73,12 +73,12 @@ function field_index(::AbstractFields{A,L}, a::Int, i::Int) where {A,L}
     field_index(A, L, a, i)
 end
 
-"index of h[a,i] in fields vector"
+"index of J[a,b,i,j] in fields vector"
 function field_index(::AbstractFields{A,L}, a::Int, b::Int, i::Int, j::Int) where {A,L}
     field_index(A, L, a, b, i, j)
 end
 
-"index of J[a,b,i,j] in fields vector"
+"index of h[a,i] in fields vector"
 function field_index(A::Int, L::Int, a::Int, i::Int)
     @boundscheck @assert 1 ≤ a ≤ A
     @boundscheck @assert 1 ≤ i ≤ L
