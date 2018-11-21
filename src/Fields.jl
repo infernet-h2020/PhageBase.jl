@@ -23,7 +23,7 @@ Base.getindex(fields::AbstractFields, idx::Int) = fields.x[idx]
 
 "sets the field at linear index idx"
 Base.setindex!(fields::AbstractFields, value::Real, 
-               idx::Int) = @inbounds fields.x[idx] = value
+               idx::Int) = fields.x[idx] = value
 
 "get h[a,i]"
 function Base.getindex(fields::AbstractFields, a::Int, i::Int)
