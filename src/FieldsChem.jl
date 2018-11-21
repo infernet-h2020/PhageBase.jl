@@ -21,9 +21,9 @@ FieldsAny = Union{Fields{A,L}, FieldsChem{A,L}} where {A,L}
 
 
 "get the chemical potential (μ)"
-getμ(fields::FieldsChem) = @inbounds fields[end]
+getμ(fields::FieldsChem) = @inbounds fields.x[end]
 "set the chemical potential (μ)"
-setμ!(fields::FieldsChem, μ::Real) = @inbounds fields[end] = μ
+setμ!(fields::FieldsChem, μ::Real) = @inbounds fields.x[end] = μ
 
 energy(fields::FieldsChem{A,L}, s::SeqAny{A,L}) where {A,L} = energy(Fields(fields), s)
 

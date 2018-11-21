@@ -54,7 +54,7 @@ function log_prior(fields::Union{Fields{A,L,U},FieldsChem{A,L,U}},
 				   prior::GaussPrior{A,L}) where {A,L,U}
 	p = zero(U)
 	@inbounds for f = 1 : length(prior.η)
-		p -= prior.η[f] * (fields[f] - prior.ξ[f])^2
+		p -= prior.η[f] * (fields.x[f] - prior.ξ[f])^2
 	end
 	p/2
 end
@@ -66,7 +66,7 @@ function log_prior_grad!(G::AbstractVector{Float64},
                          prior::GaussPrior{A,L}) where {A,L,V,T}
     @boundscheck @assert length(G) == length(fields.x)
     @inbounds for f = 1 : length(prior.η)
-        G[f] -= prior.η[f] * (fields[f] - prior.ξ[f])
+        G[f] -= prior.η[f] * (fields.x[f] - prior.ξ[f])
     end
     nothing
 end

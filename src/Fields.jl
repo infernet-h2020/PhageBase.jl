@@ -18,38 +18,31 @@ Fields{A,L,U}() where {A, L, U<:Real} = Fields{A,L}(zeros(U, fieldslen(A,L)))
 Fields{A,L}() where {A,L} = Fields{A,L,Float64}()
 
 
-"gets field at linear index idx"
-Base.getindex(fields::AbstractFields, idx::Int) = fields.x[idx]
-
-"sets the field at linear index idx"
-Base.setindex!(fields::AbstractFields, value::Real, 
-               idx::Int) = fields.x[idx] = value
-
 "get h[a,i]"
 function Base.getindex(fields::AbstractFields, a::Int, i::Int)
     idx = field_index(fields, a, i)
-    @inbounds fields[idx]
+    @inbounds fields.x[idx]
 end
 
 "get J[a,b,i,j]"
 function Base.getindex(fields::AbstractFields, 
                        a::Int, b::Int, i::Int, j::Int)
     idx = field_index(fields, a, b, i, j)
-    @inbounds fields[idx]
+    @inbounds fields.x[idx]
 end
 
 "set h[a,i]"
 function Base.setindex!(fields::AbstractFields, value::Real, 
                         a::Int, i::Int)
     idx = field_index(fields, a, i)
-    @inbounds fields[idx] = value
+    @inbounds fields.x[idx] = value
 end
 
 "set J[a,b,i,j]"
 function Base.setindex!(fields::AbstractFields, value::Real,
                         a::Int, b::Int, i::Int, j::Int)
     idx = field_index(fields, a, b, i, j)
-    @inbounds fields[idx] = value
+    @inbounds fields.x[idx] = value
 end
 
 
@@ -89,7 +82,7 @@ function energy(fields::Fields{A,L,U}, s::Sequence{A,L}) where {A,L,U}
     
     offset = 0
 	@inbounds for i=1:L
-		E -= fields[s[i] + offset]
+		E -= fields.x[s[i] + offset]
 		offset += A
     end
     
@@ -98,7 +91,7 @@ function energy(fields::Fields{A,L,U}, s::Sequence{A,L}) where {A,L,U}
     A2 = A^2;
 
 	@inbounds for j=1:L, i=1:j-1
-		E -= fields[s[i] + (s[j]-1)*A + offset]
+		E -= fields.x[s[i] + (s[j]-1)*A + offset]
 		offset += A2
 	end
 
@@ -110,7 +103,7 @@ end
 function energy(fields::Fields{A,L,U}, s::FastSeq{A,L}) where {A,L,U}
 	E = zero(U)
     @inbounds for f in s.fieldidx
-		E -= fields[f]
+		E -= fields.x[f]
     end
 	E
 end

@@ -32,8 +32,8 @@ using Random
         @test energy(fields, FastSeq(s)) ≈ Hh + HJ
 
 
-        @test (fields[2] = 1.) == 1.
-        @test fields[2] == 1.
+        @test (fields.x[2] = 1.) == 1.
+        @test fields.x[2] == 1.
 
         @test (fields[2,1] = 2.) == 2.
         @test fields[2,1] == 2.
@@ -49,7 +49,7 @@ end
     A = rand(2:6); L = rand(2:6);
     flen = fieldslen(A,L)
     fields = FieldsChem{A,L}(randn(flen + 1))
-    @test getμ(fields) == fields[end] == fields.x[end]
+    @test getμ(fields) == fields.x[end]
     @test length(fields) == flen + 1
 
     oldμ = getμ(fields)
