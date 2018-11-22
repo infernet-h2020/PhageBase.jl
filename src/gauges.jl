@@ -3,12 +3,37 @@ export zero_sum_gauge!,
        is_zero_sum_gauge
 
 
-"""transforms fields to zero-sum gauge, returning the change in μ."""
-function zero_sum_gauge!(fields::Fields{A,L}) where {A,L}
+"""
+    zero_sum_gauge!(fields)
+
+transforms fields to zero-sum gauge
+"""
+zero_sum_gauge!(fields::Fields) = zero_sum_gauge_fieldsonly!(fields)
+
+"""
+    zero_sum_gauge!(fields)
+
+transforms fields to zero-sum gauge, also changing
+the chemical potential
+"""
+function zero_sum_gauge!(fields::FieldsChem{A,L}) where {A,L}
+    Δμ = (1/A)sum(fields[a,i] for a=1:A, i=1:L)
+    Δμ += (1/A^2)sum(fields[a,b,i,j] for a=1:A, b=1:A, i=1:L for j=i+1:L)
+    zero_sum_gauge_fieldsonly!(fields)
+    setμ!(fields, getμ(fields) + Δμ)
+    nothing
+end
+
+
+"""
+    zero_sum_gauge_fieldsonly!(fields)
+
+Transforms fields (h,J) to zero sum gauge.
+"""
+function zero_sum_gauge_fieldsonly!(fields::FieldsAny{A,L}) where {A,L}
     #= This is a dumb way to do this. It can probably
     be made more efficient, but I think I never use
-    this in any performance critical code.
-    TODO: Probably this can be made faster? Not a priority. =#
+    this in any performance critical code. =#
 
     f0 = deepcopy(fields)
     for a = 1:A, b = 1:A, i = 1:L, j = i+1:L
@@ -27,16 +52,6 @@ function zero_sum_gauge!(fields::Fields{A,L}) where {A,L}
             fields[a,i] -= (1/A^2)sum(f0[x,y,j,i] for x=1:A, y=1:A, j=1:i-1)
         end
     end
-end
-
-
-"""transforms fields to zero-sum gauge, changing also μ."""
-function zero_sum_gauge!(fields::FieldsChem{A,L}) where {A,L}
-    Δμ = (1/A)sum(fields[a,i] for a=1:A, i=1:L)
-    Δμ += (1/A^2)sum(fields[a,b,i,j] for a=1:A, b=1:A, i=1:L for j=i+1:L)
-    zero_sum_gauge!(Fields(fields))
-    setμ!(fields, getμ(fields) + Δμ)
-    nothing
 end
 
 

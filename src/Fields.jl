@@ -8,7 +8,7 @@ abstract type AbstractFields{A,L,U<:Real} end
 struct Fields{A,L,U} <: AbstractFields{A,L,U}
     x::Vector{U}
     function Fields{A,L,U}(x::AbstractVector{U}) where {A, L, U<:Real}
-        @boundscheck @assert length(x) ≥ fieldslen(A,L,)
+        @boundscheck @assert length(x) == fieldslen(A,L)
         new(x)
     end
 end
@@ -75,35 +75,3 @@ function field_index(::AbstractFields{A,L}, a::Int, b::Int, i::Int, j::Int) wher
     a + (b-1 + L + (i-1 + binom2(j-1))A)A
 end
 
-
-"energy of sequence s using 'fields' (h,J)"
-function energy(fields::Fields{A,L,U}, s::Sequence{A,L}) where {A,L,U}   
-    E = zero(U)
-    
-    offset = 0
-	@inbounds for i=1:L
-		E -= fields.x[s[i] + offset]
-		offset += A
-    end
-    
-    @assert offset == A*L
-    
-    A2 = A^2;
-
-	@inbounds for j=1:L, i=1:j-1
-		E -= fields.x[s[i] + (s[j]-1)*A + offset]
-		offset += A2
-	end
-
-    E
-end
-
-
-"fast computation of energy of sequence s using 'fields' (h,J)"
-function energy(fields::Fields{A,L,U}, s::FastSeq{A,L}) where {A,L,U}
-	E = zero(U)
-    @inbounds for f in s.fieldidx
-		E -= fields.x[f]
-    end
-	E
-end

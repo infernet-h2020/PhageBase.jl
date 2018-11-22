@@ -1,5 +1,3 @@
-using Random
-
 @testset "Sequence" begin
 
     @test eltype(Sequence{23,4}) == Int
@@ -38,7 +36,7 @@ end
 @testset "FastSeq" begin
     for testrep=1:3
         Random.seed!(476272059+testrep)
-        
+
         A = rand(2:6); L = rand(2:6)
         s = rand(Sequence{A,L})
 
@@ -47,7 +45,7 @@ end
 
         @test FastSeq{3}(1,2) == Sequence{4}(1,2)
         @test FastSeq{3}(1,2) != Sequence{4}(1,3)
-                
+
         fs = FastSeq(s)
         @test fs.sequence == s
         @test length(fs.fieldidx) == binomial(L+1,2)
@@ -56,9 +54,9 @@ end
         for i=1:L
             @test (i-1)A+s[i] ∈ fs.fieldidx
         end
-        
+
         for i=1:L, j=i+1:L
-            @test A*L + binomial(j-1,2)*A^2 + (i-1)A^2 + (s[j]-1)A + s[i] ∈ fs.fieldidx 
+            @test A*L + binomial(j-1,2)*A^2 + (i-1)A^2 + (s[j]-1)A + s[i] ∈ fs.fieldidx
         end
     end
 end
