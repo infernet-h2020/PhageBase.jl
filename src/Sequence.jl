@@ -11,7 +11,6 @@ struct Sequence{A,L}
 		for i = 1:L
 			@assert 1 ≤ s[i] ≤ A
 		end
-		
         new(s)
     end
 end
