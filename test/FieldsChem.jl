@@ -11,7 +11,7 @@ fields = FieldsChem{A,L}(randn(flen + 1))
 setμ!(fields, 1e5); @test getμ(fields) == 1e5
 
 s = rand(Sequence{A,L})
-@test energy(fields, s) == energy(Fields{A,L}(fields), s)
+@test energy(fields, s) == energy(Fields(fields), s)
 @test bindφ(fields, s) == getμ(fields) - energy(fields, s)
 @test fermi_dirac_prob(fields, s) ==
     fermi_dirac_prob(getμ(fields), energy(fields, s)) ==
