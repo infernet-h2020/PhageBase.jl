@@ -1,4 +1,4 @@
-export FieldsPrior, GaussPrior, L1Prior, 
+export FieldsPrior, GaussPrior, L1Prior,
        log_prior, log_prior_grad!, log_prior_hess!
 
 
@@ -51,6 +51,9 @@ end
 
 GaussPrior(::Fields{A,L}, η::Union{Real,AbstractVector{<:Real}}) where {A,L} = GaussPrior{A,L}(η)
 GaussPrior(::Fields{A,L}, ηh::Real, ηJ::Real) where {A,L} = GaussPrior{A,L}(ηh, ηJ)
+GaussPrior(::Fields{A,L},
+		   η::AbstractVector{<:Real},
+		   ξ::AbstractVector{<:Real}) where {A,L} = GaussPrior{A,L}(η, ξ)
 
 
 "fields log prior"
@@ -95,7 +98,7 @@ end
 struct L1Prior{A,L} <: FieldsPrior{A,L}
     η::Vector{Float64}  # regularization weight
     ξ::Vector{Float64}  # center
-    function L1Prior{A,L}(η::AbstractVector{Float64}, 
+    function L1Prior{A,L}(η::AbstractVector{Float64},
                           ξ::AbstractVector{Float64}) where {A,L}
 		@checkposint A L
 		@assert length(η) == length(ξ) == fieldslen(A,L)
