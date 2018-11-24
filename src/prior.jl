@@ -1,15 +1,15 @@
-export FieldsPrior, GaussPrior, L1Prior,
+export AbstractPrior, GaussPrior, L1Prior,
        log_prior, log_prior_grad!, log_prior_hess!
 
 
-abstract type FieldsPrior{A,L} end
+abstract type AbstractPrior{A,L} end
 
 
 # **********
 # Gauss Prior
 # **********
 
-struct GaussPrior{A,L} <: FieldsPrior{A,L}
+struct GaussPrior{A,L} <: AbstractPrior{A,L}
     η::Vector{Float64}  # regularization weight (= 1 / prior variance)
     ξ::Vector{Float64}  # center of the Guassian prior
     function GaussPrior{A,L}(η::AbstractVector{Float64},
@@ -95,7 +95,7 @@ end
 # L1 Prior
 # **********
 
-struct L1Prior{A,L} <: FieldsPrior{A,L}
+struct L1Prior{A,L} <: AbstractPrior{A,L}
     η::Vector{Float64}  # regularization weight
     ξ::Vector{Float64}  # center
     function L1Prior{A,L}(η::AbstractVector{Float64},
