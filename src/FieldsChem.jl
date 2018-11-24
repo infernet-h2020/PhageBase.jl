@@ -1,4 +1,5 @@
-export FieldsChem, bindφ, getμ, setμ!
+export FieldsChem, FieldsAny
+export bindφ, getμ, setμ!
 
 
 "wrapper around fields vector that includes chemical potential (h,J,μ)"
