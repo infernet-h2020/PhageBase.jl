@@ -1,20 +1,21 @@
 export AbstractFields, Fields, field_index, fieldslen
 
-
-abstract type AbstractFields{A,L,U<:Real} end
+#= 'U' is the type of the field components. We are generic
+here   =#
+abstract type AbstractFields{A,L,U} end
 
 
 "wrapper around fields vector (h,J)"
 struct Fields{A,L,U} <: AbstractFields{A,L,U}
     x::Vector{U}
-    function Fields{A,L,U}(x::AbstractVector{U}) where {A, L, U<:Real}
+    function Fields{A,L,U}(x::AbstractVector{U}) where {A,L,U}
         @boundscheck @assert length(x) == fieldslen(A,L)
         new(x)
     end
 end
 
-Fields{A,L}(x::Vector{U}) where {A, L, U<:Real} = Fields{A,L,U}(x)
-Fields{A,L,U}() where {A, L, U<:Real} = Fields{A,L}(zeros(U, fieldslen(A,L)))
+Fields{A,L}(x::Vector{U}) where {A,L,U} = Fields{A,L,U}(x)
+Fields{A,L,U}() where {A,L,U} = Fields{A,L}(zeros(U, fieldslen(A,L)))
 Fields{A,L}() where {A,L} = Fields{A,L,Float64}()
 
 
@@ -48,7 +49,7 @@ end
 
 Base.length(fields::AbstractFields) = length(fields.x)
 Base.iterate(fields::AbstractFields, state = 1) = iterate(fields.x, state)
-Base.eltype(::Type{AbstractFields{A,L,U}}) where {A,L,U<:Real} = @isdefined(U) ? U : Real
+Base.eltype(::Type{AbstractFields{A,L,U}}) where {A,L,U} = eltype(Vector{U})
 
 Base.firstindex(fields::AbstractFields) = firstindex(fields.x)
 Base.lastindex(fields::AbstractFields)  = lastindex(fields.x)

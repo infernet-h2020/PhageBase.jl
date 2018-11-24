@@ -4,7 +4,7 @@ export FieldsChem, bindφ, getμ, setμ!
 "wrapper around fields vector that includes chemical potential (h,J,μ)"
 struct FieldsChem{A,L,U} <: AbstractFields{A,L,U}
     x::Vector{U}
-    function FieldsChem{A,L,U}(x::AbstractVector{U}) where {A, L, U<:Real}
+    function FieldsChem{A,L,U}(x::AbstractVector{U}) where {A,L,U}
         @boundscheck @assert length(x) == fieldslen(A,L,) + 1
         new(x)
     end
