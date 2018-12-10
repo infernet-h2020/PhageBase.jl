@@ -26,6 +26,8 @@ Base.convert(::Type{NTuple{L,Int}}, s::Sequence{A,L}) where {A,L} = s.s
 Base.convert(::Type{Sequence{A,L}}, s::Sequence{B,L}) where {A,B,L} = Sequence{A,L}(s.s)
 Base.convert(::Type{Sequence{A}}, s::Sequence{B,L}) where {A,B,L} = Sequence{A,L}(s.s)
 
+Base.collect(s::Sequence{A,L}) = collect(s.s)
+
 Base.:(==)(s::Sequence, r::Sequence) = s.s == r.s
 Base.hash(s::Sequence) = hash(s.s)
 
