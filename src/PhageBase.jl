@@ -1,12 +1,15 @@
 module PhageBase
 
+using PhageSeq
+
+export Sequence, SequencesIterator, hamming, subseq, seqinsert # from PhageSeq
+export energy
+
 include("util.jl")
 include("math.jl")
 
 include("fermi_dirac.jl")
 
-include("Sequence.jl")
-include("SequencesIterator.jl")
 include("FastSeq.jl")
 
 include("Fields.jl")
