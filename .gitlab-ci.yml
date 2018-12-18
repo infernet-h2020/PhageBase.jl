@@ -7,8 +7,28 @@ image: julia:1.0  # image comes from Docker hub
 before_script:
   - apt-get update -qq && apt-get install -y build-essential
 
+  # establish an ssh key pair to access other repos
+  # see https://docs.gitlab.com/ee/ci/ssh_keys/#ssh-keys-when-using-the-docker-executor
+  # define $PhageCIGitlabSSHKey in the Gitlab environment variables of this repo.
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$PHAGE_GITLAB_CI_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+
+  # If I don't do this, I get a host verification error
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+  # test gitlab ssh access
+  - pwd
+  - ssh -vvvT git@gitlab.com
+
 default:
   script:
+    # dependencies
+    - julia -e "import Pkg; Pkg.add(Pkg.PackageSpec(; url = \"git@gitlab.com:PhageDisplayInference/PhageSeq.jl.git\"))"
+    
+    # install and test
     - julia -e "import Pkg; Pkg.develop(Pkg.PackageSpec(; path=pwd(), name=\"PhageBase\"))"
     - julia -e "import Pkg; Pkg.test(\"PhageBase\"; coverage = true)"
     #- julia coverage_script.jl
