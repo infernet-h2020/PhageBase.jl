@@ -2,6 +2,7 @@ using PhageBase
 using Test, Random
 using ForwardDiff
 
+@testset "sequence" begin include("sequence.jl") end
 @testset "Fields" begin include("Fields.jl") end
 @testset "FieldsChem" begin include("FieldsChem.jl") end
 @testset "math" begin include("math.jl") end

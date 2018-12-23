@@ -1,12 +1,15 @@
 module PhageBase
 
-using PhageSeq
+using Random, ArgCheck
 
-export Sequence, SequencesIterator, hamming, subseq, seqinsert # from PhageSeq
+export Sequence, SequencesIterator, hamming, subseq, seqinsert
 export energy
 
 include("util.jl")
 include("math.jl")
+
+include("Sequence.jl")
+include("SequencesIterator.jl")
 
 include("fermi_dirac.jl")
 

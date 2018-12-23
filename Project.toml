@@ -3,6 +3,7 @@ uuid = "d6599100-c4f8-11e8-3fbb-eb82a55b1af5"
 version = "0.1.0-dev"
 
 [deps]
+ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
 PhageSeq = "26173bb0-02e4-11e9-28eb-c15b55359295"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
