@@ -1,6 +1,4 @@
-using PhageBase
-using Test, Random
-using ForwardDiff
+using Test, PhageBase, Random, ForwardDiff
 
 @testset "sequence" begin include("sequence.jl") end
 @testset "Fields" begin include("Fields.jl") end
