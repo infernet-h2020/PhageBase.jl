@@ -26,8 +26,8 @@ before_script:
 default:
   script:
     # dependencies
-    - julia -e "import Pkg; Pkg.add(Pkg.PackageSpec(; url = \"git@gitlab.com:PhageDisplayInference/PhageSeq.jl.git\"))"
-    
+    #- julia -e "import Pkg; Pkg.add(Pkg.PackageSpec(; url = \"git@gitlab.com:PhageDisplayInference/PhageSeq.jl.git\"))"
+
     # install and test
     - julia -e "import Pkg; Pkg.develop(Pkg.PackageSpec(; path=pwd(), name=\"PhageBase\"))"
     - julia -e "import Pkg; Pkg.test(\"PhageBase\"; coverage = true)"
