@@ -29,12 +29,6 @@ uuid = "56ddb016-857b-54e1-b83d-db4d58db5568"
 deps = ["Base64"]
 uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 
-[[PhageSeq]]
-deps = ["ArgCheck", "Random"]
-path = "../PhageSeq.jl"
-uuid = "26173bb0-02e4-11e9-28eb-c15b55359295"
-version = "0.1.0"
-
 [[Random]]
 deps = ["Serialization"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
